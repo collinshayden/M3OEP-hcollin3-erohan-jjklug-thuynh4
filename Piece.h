@@ -13,8 +13,12 @@ class Piece {
 public:
     Piece();
 
+    virtual vector<int> getMoves(int index);
+
 private:
-    string color;
+    bool isWhite;
+    bool hasMoved;
+
 
 };
 

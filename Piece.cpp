@@ -7,3 +7,7 @@
 Piece::Piece() {
 
 }
+
+vector<int> Piece::getMoves(int index) {
+    return vector<int>();
+}
