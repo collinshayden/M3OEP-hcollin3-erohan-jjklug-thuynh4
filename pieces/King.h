@@ -5,7 +5,7 @@
 #ifndef M1OEP_HCOLLIN3_KING_H
 #define M1OEP_HCOLLIN3_KING_H
 
-#include "Piece.h"
+#include "../Piece.h"
 
 class King : public Piece{
 

@@ -5,7 +5,7 @@
 #ifndef M1OEP_HCOLLIN3_BISHOP_H
 #define M1OEP_HCOLLIN3_BISHOP_H
 
-#include "Piece.h"
+#include "../Piece.h"
 
 class Bishop : public Piece {
 

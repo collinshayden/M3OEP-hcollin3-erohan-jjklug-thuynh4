@@ -3,3 +3,8 @@
 //
 
 #include "Pawn.h"
+
+
+Pawn::Pawn(bool isWhite) : Piece(isWhite) {
+
+}

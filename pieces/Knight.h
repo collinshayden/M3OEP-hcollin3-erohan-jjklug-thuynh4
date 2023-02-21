@@ -5,7 +5,7 @@
 #ifndef M1OEP_HCOLLIN3_KNIGHT_H
 #define M1OEP_HCOLLIN3_KNIGHT_H
 
-#include "Piece.h"
+#include "../Piece.h"
 
 class Knight : public Piece{
 

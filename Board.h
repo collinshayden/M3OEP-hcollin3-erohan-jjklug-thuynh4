@@ -19,9 +19,7 @@ public:
     //Setter
     void move();
 
-    friend std::ostream &operator<<(std::ostream &outs, Board &obj) {
-        outs << obj.getBoardState();
-    }
+    void printBoard();
 
 
         private:

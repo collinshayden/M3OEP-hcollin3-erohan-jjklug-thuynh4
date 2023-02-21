@@ -5,10 +5,11 @@
 #ifndef M1OEP_HCOLLIN3_PAWN_H
 #define M1OEP_HCOLLIN3_PAWN_H
 
-#include "Piece.h"
+#include "../Piece.h"
 
 class Pawn : public Piece{
-
+public:
+    Pawn(bool isWhite);
 };
 
 

@@ -5,7 +5,7 @@
 #ifndef M1OEP_HCOLLIN3_ROOK_H
 #define M1OEP_HCOLLIN3_ROOK_H
 
-#include "Piece.h"
+#include "../Piece.h"
 
 class Rook : public Piece{
 

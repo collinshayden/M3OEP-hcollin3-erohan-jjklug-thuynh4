@@ -1,12 +1,13 @@
 //Hayden Collins, OEP
 #include "Board.h"
+#include <iomanip>
+#include <iostream>
 
 using namespace std;
 
 int main () {
     Board board;
-
-    cout << board.getBoardState() << endl;
+    board.printBoard();
 
     return 0;
 }

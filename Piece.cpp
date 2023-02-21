@@ -4,10 +4,14 @@
 
 #include "Piece.h"
 
-Piece::Piece() {
+using namespace std;
 
+Piece::Piece(bool white) {
+    hasMoved = false;
+    isWhite = white;
 }
 
 vector<int> Piece::getMoves(int index) {
-    return vector<int>();
+    return vector<int>{-1};
 }
+
