@@ -8,6 +8,8 @@
 #include "../Piece.h"
 
 class Knight : public Piece{
+public:
+    vector<int> getAttackedSquares(int initial_pos);
 
 };
 

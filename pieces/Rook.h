@@ -8,7 +8,7 @@
 #include "../Piece.h"
 
 class Rook : public Piece{
-
+    vector<int> getAttackedSquares(int initial_pos);
 };
 
 

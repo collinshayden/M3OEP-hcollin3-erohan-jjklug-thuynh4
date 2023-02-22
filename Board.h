@@ -22,8 +22,10 @@ public:
     void printBoard();
 
 
-        private:
+private:
     vector<int> board;
+
+    void printAttackedSquares(bool side);
 };
 
 
