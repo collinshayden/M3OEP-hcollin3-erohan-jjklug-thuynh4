@@ -21,16 +21,29 @@ enum squares {
 };
 
 Board::Board() {
+//    board = {
+//        Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+//        Rook(true), Knight(true), Bishop(true), Queen(true), King(true), Bishop(true), Knight(true), Rook(true), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard()
+//    };
+
     board = {
-        Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), Pawn(true), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
-        Rook(true), Knight(true), Bishop(true), Queen(true), King(true), Bishop(true), Knight(true), Rook(true), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard()
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Knight(false), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+            Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), Empty(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
+
     };
+
 }
 
 vector<Piece> Board::getBoardState() {
@@ -63,8 +76,7 @@ void Board::printBoard() {
 }
 
 void Board::printAttackedSquares(bool side) {
-    vector<int> all_attacked_squares;
-    vector<int> piece_attacked_squares;
+    vector<int> attacked_squares = getAttackedSquares(side);
     printf("\n");
 
     for (int rank = 0; rank < 8; rank++) {
@@ -74,18 +86,31 @@ void Board::printAttackedSquares(bool side) {
             if (file == 0) {
                 printf(" %d  ", 8 - rank);
             }
-            // if square is on board
-//            if (!(square & 0x88)) {
-//                cout << board[square].unicode << " ";
-//            }
-            piece_attacked_squares = board[square].getAttackedSquares(square);
-            all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares), end(piece_attacked_squares));
+            if (find(attacked_squares.begin(), attacked_squares.end(), square) != attacked_squares.end()) {
+                printf("x");
+            }
+            else {
+                printf(".");
+            }
         }
         printf("\n");
     }
     printf("\n    a b c d e f g h\n");
 }
 
-vector<Piece> Board::getAttackedSquares(bool side) {
-    return vector<Piece>();
+vector<int> Board::getAttackedSquares(bool side) {
+    vector<int> all_attacked_squares;
+    vector<int> piece_attacked_squares;
+
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+            if (board[square].side == side) {
+                piece_attacked_squares = board[square].getAttackedSquares(square);
+                all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares),
+                                            end(piece_attacked_squares));
+            }
+        }
+    }
+    return all_attacked_squares;
 }

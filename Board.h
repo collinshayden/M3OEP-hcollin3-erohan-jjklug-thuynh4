@@ -19,7 +19,7 @@ public:
     //Setter
     void move();
 
-    vector<Piece> getAttackedSquares(bool side);
+    vector<int> getAttackedSquares(bool side);
 
     void printBoard();
 
