@@ -28,5 +28,6 @@ vector<int> Pawn::getAttackedSquares(int initial_pos, bool side) {
 }
 
 Pawn::Pawn(bool side) : Piece(side) {
-
+    side ? value = 1 : value = 7;
+    unicode = "♙";
 }

@@ -5,10 +5,13 @@
 #include "Piece.h"
 
 using namespace std;
-
-Piece::Piece(bool side) {
+Piece::Piece() {
     hasMoved = false;
-    side = side;
+}
+
+Piece::Piece(bool isWhite) {
+    hasMoved = false;
+    side = isWhite;
 }
 
 vector<int> Piece::getMoves(int index) {

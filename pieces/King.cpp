@@ -17,5 +17,6 @@ vector<int> King::getAttackedSquares(int initial_pos) {
 }
 
 King::King(bool side) : Piece(side) {
-
+    side ? value = 6 : value = 12;
+    unicode = "♔";
 }

@@ -4,6 +4,9 @@
 
 #include "Empty.h"
 
-Empty::Empty() {
+
+Empty::Empty() : Piece() {
+    value = 0x88;
+    unicode = ".";
 
 }

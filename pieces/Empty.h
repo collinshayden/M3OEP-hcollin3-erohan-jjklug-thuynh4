@@ -9,7 +9,7 @@
 
 class Empty : public Piece {
 public:
-    Empty(bool );
+    Empty();
 };
 
 

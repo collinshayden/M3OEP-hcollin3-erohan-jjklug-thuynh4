@@ -12,16 +12,15 @@ using namespace std;
 class Piece {
 
 public:
+    Piece();
     Piece(bool side);
 
     virtual vector<int> getMoves(int index);
 
-private:
     bool side; // 1 for white, 0 for black
     bool hasMoved;
-    vector<int> moves;
-
-
+    int value;
+    string unicode;
 };
 
 

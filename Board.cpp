@@ -4,10 +4,11 @@
 #include "Board.h"
 #include <stdio.h>
 #include "pieces/pieceClasses.h"
+#include "string"
 
 using namespace std;
 
-//enum Pieces {e, P, R, N, B, Q, K, p, r, n, b, q, k};
+enum Pieces {e, P, R, N, B, Q, K, p, r, n, b, q, k};
 
 enum squares {
     a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
@@ -19,27 +20,27 @@ enum squares {
     a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
-char *unicode_pieces[] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
+char *unicode_pieces[13] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
 
 int o = 0x88;
 
 Board::Board() {
-//    board = {
-//      r, n, b, q, k, b, n, r, o, o, o, o, o, o, o, o,
-//      p, p, p, p, p, p, p, p, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      P, P, P, P, P, P, P, P, o, o, o, o, o, o, o, o,
-//      R, N, B, Q, K, B, N, R, o, o, o, o, o, o, o, o,
-//    };
-        board = {
-            Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), Empty,
-        };
+    board = {
+      r, n, b, q, k, b, n, r, o, o, o, o, o, o, o, o,
+      p, p, p, p, p, p, p, p, o, o, o, o, o, o, o, o,
+      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+      P, P, P, P, P, P, P, P, o, o, o, o, o, o, o, o,
+      R, N, B, Q, K, B, N, R, o, o, o, o, o, o, o, o,
+    };
+//        board = {
+//            Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), Empty()
+//        };
 }
 
-vector<Piece> Board::getBoardState() {
+vector<int> Board::getBoardState() {
     return board;
 }
 
