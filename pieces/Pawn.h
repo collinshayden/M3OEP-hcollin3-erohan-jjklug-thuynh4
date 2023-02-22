@@ -9,7 +9,8 @@
 
 class Pawn : public Piece{
 public:
-    Pawn(bool isWhite);
+    Pawn(bool side);
+    vector<int> getAttackedSquares(int initial_pos, bool side);
 };
 
 

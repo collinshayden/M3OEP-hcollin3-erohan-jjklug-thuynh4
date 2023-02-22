@@ -8,7 +8,9 @@
 #include "../Piece.h"
 
 class King : public Piece{
-
+public:
+    King(bool side);
+    vector<int> getAttackedSquares(int initial_pos);
 };
 
 

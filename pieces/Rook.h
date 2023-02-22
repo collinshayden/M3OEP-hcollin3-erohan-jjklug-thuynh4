@@ -8,6 +8,8 @@
 #include "../Piece.h"
 
 class Rook : public Piece{
+public:
+    Rook(bool side);
     vector<int> getAttackedSquares(int initial_pos);
 };
 

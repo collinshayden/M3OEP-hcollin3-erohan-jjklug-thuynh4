@@ -2,12 +2,12 @@
 // Created by Hayden Collins on 2/3/23.
 //
 #include "Board.h"
-#include "pieces/Pawn.h"
 #include <stdio.h>
+#include "pieces/pieceClasses.h"
 
 using namespace std;
 
-enum Pieces {e, P, R, N, B, Q, K, p, r, n, b, q, k};
+//enum Pieces {e, P, R, N, B, Q, K, p, r, n, b, q, k};
 
 enum squares {
     a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
@@ -24,19 +24,22 @@ char *unicode_pieces[] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟︎
 int o = 0x88;
 
 Board::Board() {
-    board = {
-      r, n, b, q, k, b, n, r, o, o, o, o, o, o, o, o,
-      p, p, p, p, p, p, p, p, o, o, o, o, o, o, o, o,
-      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-      P, P, P, P, P, P, P, P, o, o, o, o, o, o, o, o,
-      R, N, B, Q, K, B, N, R, o, o, o, o, o, o, o, o,
-    };
+//    board = {
+//      r, n, b, q, k, b, n, r, o, o, o, o, o, o, o, o,
+//      p, p, p, p, p, p, p, p, o, o, o, o, o, o, o, o,
+//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
+//      P, P, P, P, P, P, P, P, o, o, o, o, o, o, o, o,
+//      R, N, B, Q, K, B, N, R, o, o, o, o, o, o, o, o,
+//    };
+        board = {
+            Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), Empty,
+        };
 }
 
-std::vector<int> Board::getBoardState() {
+vector<Piece> Board::getBoardState() {
     return board;
 }
 
@@ -67,4 +70,8 @@ void Board::printBoard() {
 
 void Board::printAttackedSquares(bool side) {
     
+}
+
+vector<int> Board::getAttackedSquares(bool side) {
+    return vector<int>();
 }

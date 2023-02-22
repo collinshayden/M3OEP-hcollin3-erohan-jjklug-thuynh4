@@ -14,18 +14,19 @@ public:
     Board();
 
     //Getter
-    vector<int> getBoardState();
+    vector<Piece> getBoardState();
 
     //Setter
     void move();
 
+    vector<int> getAttackedSquares(bool side);
+
     void printBoard();
 
-
-private:
-    vector<int> board;
-
     void printAttackedSquares(bool side);
+private:
+    vector<Piece> board;
+
 };
 
 

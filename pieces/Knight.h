@@ -9,6 +9,7 @@
 
 class Knight : public Piece{
 public:
+    Knight(bool side);
     vector<int> getAttackedSquares(int initial_pos);
 
 };

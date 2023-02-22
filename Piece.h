@@ -12,12 +12,12 @@ using namespace std;
 class Piece {
 
 public:
-    Piece(bool isWhite);
+    Piece(bool side);
 
     virtual vector<int> getMoves(int index);
 
 private:
-    bool isWhite;
+    bool side; // 1 for white, 0 for black
     bool hasMoved;
     vector<int> moves;
 

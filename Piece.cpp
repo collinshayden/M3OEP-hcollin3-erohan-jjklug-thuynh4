@@ -6,9 +6,9 @@
 
 using namespace std;
 
-Piece::Piece(bool white) {
+Piece::Piece(bool side) {
     hasMoved = false;
-    isWhite = white;
+    side = side;
 }
 
 vector<int> Piece::getMoves(int index) {
