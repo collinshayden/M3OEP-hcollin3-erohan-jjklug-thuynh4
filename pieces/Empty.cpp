@@ -6,7 +6,6 @@
 
 
 Empty::Empty() : Piece() {
-    value = 0x88;
+    value = 0;
     unicode = ".";
-
 }
