@@ -8,3 +8,7 @@ OffBoard::OffBoard() : Piece() {
     value = 0x88;
     unicode = "";
 }
+
+vector<int> OffBoard::getAttackedSquares(int initial_pos) {
+    return vector<int>{};
+}

@@ -9,3 +9,7 @@ Empty::Empty() : Piece() {
     value = 0;
     unicode = ".";
 }
+
+vector<int> Empty::getAttackedSquares(int initial_pos) {
+    return vector<int>{};
+}

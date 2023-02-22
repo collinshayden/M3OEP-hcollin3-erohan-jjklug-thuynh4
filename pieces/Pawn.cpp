@@ -4,7 +4,7 @@
 
 #include "Pawn.h"
 
-vector<int> Pawn::getAttackedSquares(int initial_pos, bool side) {
+vector<int> Pawn::getAttackedSquares(int initial_pos) {
     vector<int> possible_moves;
     //white pawns
     if (side) {

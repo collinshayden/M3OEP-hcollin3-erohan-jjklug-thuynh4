@@ -14,7 +14,12 @@ Piece::Piece(bool isWhite) {
     side = isWhite;
 }
 
-vector<int> Piece::getMoves(int index) {
-    return vector<int>{-1};
+vector<int> Piece::getAttackedSquares(int index) {
+    return vector<int>{};
 }
+
+//vector<int> Piece::getAttackedSquares(int index) {
+//    return vector<int>(-1);
+//}
+
 

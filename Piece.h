@@ -15,7 +15,7 @@ public:
     Piece();
     Piece(bool side);
 
-    virtual vector<int> getMoves(int index);
+    virtual vector<int> getAttackedSquares(int index);
 
     bool side; // 1 for white, 0 for black
     bool hasMoved;

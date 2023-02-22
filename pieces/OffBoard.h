@@ -11,6 +11,7 @@
 class OffBoard : public Piece {
 public:
     OffBoard();
+    vector<int> getAttackedSquares(int initial_pos);
 };
 
 

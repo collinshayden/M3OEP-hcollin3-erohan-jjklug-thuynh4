@@ -10,6 +10,7 @@
 class Empty : public Piece {
 public:
     Empty();
+    vector<int> getAttackedSquares(int initial_pos);
 };
 
 

@@ -9,8 +9,6 @@
 
 using namespace std;
 
-//enum Pieces {e, P, R, N, B, Q, K, p, r, n, b, q, k};
-
 enum squares {
     a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
     a7 = 16,  b7, c7, d7, e7, f7, g7, h7,
@@ -21,21 +19,8 @@ enum squares {
     a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
-//char *unicode_pieces[13] = {".", "♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
-
-int o = 0x88;
 
 Board::Board() {
-//    board = {
-//      r, n, b, q, k, b, n, r, o, o, o, o, o, o, o, o,
-//      p, p, p, p, p, p, p, p, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      e, e, e, e, e, e, e, e, o, o, o, o, o, o, o, o,
-//      P, P, P, P, P, P, P, P, o, o, o, o, o, o, o, o,
-//      R, N, B, Q, K, B, N, R, o, o, o, o, o, o, o, o,
-//    };
     board = {
         Rook(false), Knight(false), Bishop(false), Queen(false), King(false), Bishop(false), Knight(false), Rook(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
         Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), Pawn(false), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(), OffBoard(),
@@ -78,7 +63,27 @@ void Board::printBoard() {
 }
 
 void Board::printAttackedSquares(bool side) {
-    
+    vector<int> all_attacked_squares;
+    vector<int> piece_attacked_squares;
+    printf("\n");
+
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+
+            if (file == 0) {
+                printf(" %d  ", 8 - rank);
+            }
+            // if square is on board
+//            if (!(square & 0x88)) {
+//                cout << board[square].unicode << " ";
+//            }
+            piece_attacked_squares = board[square].getAttackedSquares(square);
+            all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares), end(piece_attacked_squares));
+        }
+        printf("\n");
+    }
+    printf("\n    a b c d e f g h\n");
 }
 
 vector<Piece> Board::getAttackedSquares(bool side) {
