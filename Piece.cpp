@@ -5,13 +5,10 @@
 #include "Piece.h"
 
 using namespace std;
-Piece::Piece() {
-    hasMoved = false;
-}
 
-Piece::Piece(bool isWhite) {
+Piece::Piece(int color) {
     hasMoved = false;
-    side = isWhite;
+    side = color;
 }
 
 vector<int> Piece::getAttackedSquares(int index) {

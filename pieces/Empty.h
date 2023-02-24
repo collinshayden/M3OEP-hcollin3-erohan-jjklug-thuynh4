@@ -9,8 +9,8 @@
 
 class Empty : public Piece {
 public:
-    Empty();
-    vector<int> getAttackedSquares(int initial_pos);
+    Empty(int side);
+    vector<int> getAttackedSquares(int initial_pos) override;
 };
 
 

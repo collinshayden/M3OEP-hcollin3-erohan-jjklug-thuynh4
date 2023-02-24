@@ -10,8 +10,8 @@
 
 class OffBoard : public Piece {
 public:
-    OffBoard();
-    vector<int> getAttackedSquares(int initial_pos);
+    OffBoard(int side);
+    vector<int> getAttackedSquares(int initial_pos) override;
 };
 
 

@@ -18,7 +18,7 @@ vector<int> Queen::getAttackedSquares(int initial_pos) {
     }
 }
 
-Queen::Queen(bool side) : Piece(side) {
+Queen::Queen(int side) : Piece(side) {
     side ? value = 5 : value = 11;
     unicode = "♕";
 }

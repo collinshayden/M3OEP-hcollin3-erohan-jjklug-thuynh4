@@ -9,8 +9,8 @@
 
 class Bishop : public Piece {
 public:
-    Bishop(bool side);
-    vector<int> getAttackedSquares(int initial_pos);
+    Bishop(int side);
+    vector<int> getAttackedSquares(int initial_pos) override;
 
 };
 

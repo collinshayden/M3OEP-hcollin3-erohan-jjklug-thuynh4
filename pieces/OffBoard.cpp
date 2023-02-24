@@ -4,9 +4,10 @@
 
 #include "OffBoard.h"
 
-OffBoard::OffBoard() : Piece() {
+OffBoard::OffBoard(int color) : Piece(color) {
     value = 0x88;
     unicode = "";
+    side = color;
 }
 
 vector<int> OffBoard::getAttackedSquares(int initial_pos) {

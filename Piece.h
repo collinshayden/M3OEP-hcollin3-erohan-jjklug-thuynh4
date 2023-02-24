@@ -12,12 +12,11 @@ using namespace std;
 class Piece {
 
 public:
-    Piece();
-    Piece(bool side);
+    Piece(int side);
 
     virtual vector<int> getAttackedSquares(int index);
 
-    bool side; // 1 for white, 0 for black
+    int side; // 1 for white, 0 for black, -1 for empty/offboard
     bool hasMoved;
     int value;
     string unicode;
