@@ -86,9 +86,9 @@ Board::Board() {
             board.push_back(std::unique_ptr<Piece>(make_unique<OffBoard>(-2)));
         }
     }
-    board.at(51) = unique_ptr<Piece>(make_unique<Bishop>(1));
+    board.at(51) = unique_ptr<Piece>(make_unique<Queen>(1));
 }
-// TODO Queen not working, pawn attacks instead of forward, bishop includes original, King not working
+// TODO Queen not working, pawn attacks instead of forward, King not working
 void Board::move() {
 
 }
@@ -114,7 +114,7 @@ void Board::printBoard() {
     printf("\n    a b c d e f g h\n");
 }
 
-void Board::printAttackedSquares(bool side) {
+void Board::printAttackedSquares(int side) {
     vector<int> attacked_squares = getAttackedSquares(side);
     printf("\n");
 
@@ -138,7 +138,7 @@ void Board::printAttackedSquares(bool side) {
     printf("\n    a b c d e f g h\n");
 }
 
-vector<int> Board::getAttackedSquares(bool side) {
+vector<int> Board::getAttackedSquares(int side) {
     vector<int> all_attacked_squares;
     vector<int> piece_attacked_squares;
 //
