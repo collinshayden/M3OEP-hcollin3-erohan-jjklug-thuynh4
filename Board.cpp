@@ -86,7 +86,7 @@ Board::Board() {
             board.push_back(std::unique_ptr<Piece>(make_unique<OffBoard>(-2)));
         }
     }
-    board.at(51) = unique_ptr<Piece>(make_unique<Knight>(1));
+    board.at(51) = unique_ptr<Piece>(make_unique<Bishop>(1));
 }
 // TODO Queen not working, pawn attacks instead of forward, bishop includes original, King not working
 void Board::move() {

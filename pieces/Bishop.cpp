@@ -8,7 +8,7 @@ vector<int> Bishop::getAttackedSquares(int initial_pos) {
     vector<int> possible_moves;
     int bishop_offsets[4] = {15, -15, 17, -17};
     for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 8; j++) {
+        for (int j = 1; j < 8; j++) {
             int target_sq = initial_pos + bishop_offsets[i] * j;
             if (!(target_sq & 0x88)) {
                 possible_moves.push_back(target_sq);
