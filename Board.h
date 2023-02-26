@@ -13,9 +13,6 @@ public:
     // Constructor
     Board();
 
-    //Getter
-    vector<Piece> getBoardState();
-
     //Setter
     void move();
 
@@ -25,7 +22,7 @@ public:
 
     void printAttackedSquares(bool side);
 private:
-    vector<Piece> board;
+    vector<unique_ptr<Piece>> board;
 
 };
 
