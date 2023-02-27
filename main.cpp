@@ -25,4 +25,7 @@ int main () {
     cout <<"Attacked squares" << endl;
     board.printAttackedSquares(true);
 
+    board.getLegalMoves(true);
+//    board.printBoard();
+//    board.printAttackedSquares(true);
 }

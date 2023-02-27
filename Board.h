@@ -20,7 +20,7 @@ public:
     int getKingIndex(bool side);
 
     //Setters
-    bool setBoard(vector<unique_ptr<Piece>> new_board);
+    bool setBoard(vector<unique_ptr<Piece>> &new_board);
 
     void setPiece(int index, unique_ptr<Piece> new_piece);
 

@@ -69,8 +69,8 @@ Board::Board(bool setup) {
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
     else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Rook>(true));
-        board.at(d2) = unique_ptr<Piece>(make_unique<Knight>(false));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+//        board.at(d2) = unique_ptr<Piece>(make_unique<Knight>(false));
     }
 }
 
@@ -78,17 +78,21 @@ vector<unique_ptr<Piece>> Board::getBoard() {
     vector<unique_ptr<Piece>> board_copy;
     for (int i = 0; i < board.size(); i++) {
         board_copy.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-        *board_copy.at(i) = *board.at(i);
+        if (!(i & 0x88)) {
+            *board_copy.at(i) = *board.at(i);
+        }
     }
     return board_copy;
 }
 
-bool Board::setBoard(vector<unique_ptr<Piece>> new_board) {
+bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     if (board.size() == new_board.size()) {
-//        board.clear();
+        board.clear();
         for (int i = 0; i < new_board.size(); i++) {
-//            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-//            *board.at(i) = *new_board.at(i);
+            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
+            if (!(i & 0x88)) {
+                *board.at(i) = *new_board.at(i);
+            }
         }
         return true;
     }
@@ -153,7 +157,10 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
 
     vector<unique_ptr<Piece>> temp_board = getBoard();
     move(d5, c7);
-//    setBoard(temp_board);
+    printBoard();
+    setBoard(temp_board);
+    printBoard();
+    printAttackedSquares(true);
 
 
 
