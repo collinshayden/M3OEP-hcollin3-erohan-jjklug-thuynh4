@@ -15,4 +15,3 @@
 #include "Knight.h"
 #include "King.h"
 #include "Empty.h"
-#include "OffBoard.h"

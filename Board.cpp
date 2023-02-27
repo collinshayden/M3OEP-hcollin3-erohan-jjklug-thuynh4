@@ -10,17 +10,13 @@
 using namespace std;
 
 Board::Board() {
-    for (int j = 0; j < 8; j++) {
-        for (int i = 0; i < 8; i++) {
-            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(-1)));
-        }
-        for (int i = 0; i < 8; i++) {
-            board.push_back(std::unique_ptr<Piece>(make_unique<OffBoard>(-2)));
-        }
+    for (int j = 0; j < 128; j++) {
+        board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(-1)));
     }
-    board.at(1) = unique_ptr<Piece>(make_unique<King>(1));
+
+    board.at(51) = unique_ptr<Piece>(make_unique<Knight>(1));
 }
-// TODO Queen not working, pawn attacks instead of forward, King not working
+
 void Board::move() {
 
 }
