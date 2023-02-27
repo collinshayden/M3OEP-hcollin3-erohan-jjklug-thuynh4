@@ -24,13 +24,45 @@ int main () {
     board.printBoard();
     board.printAttackedSquares(true);
 
+    Knight k(false);
+    vector<int> k_attacked_squares = k.getAttackedSquares(d4);
+    cout << "Knight on d4 attacks ";
+    for (int i = 0; i < k_attacked_squares.size(); i++) {
+        cout << k_attacked_squares.at(i) << ", ";
+    }
+    cout <<endl<<endl;
 
-//    cout << "Testing Knight moves" << endl;
-//    Board board2(false);
-//    board2.setBoard(d5, unique_ptr<Piece>(make_unique<Knight>(true)));
-//    board2.printBoard();
-//    board2.printAttackedSquares(true);
+    Rook r(false);
+    vector<int> r_attacked_squares = r.getAttackedSquares(d4);
+    cout << "Rook on d4 attacks ";
+    for (int i = 0; i < r_attacked_squares.size(); i++) {
+        cout << r_attacked_squares.at(i) << ", ";
+    }
+    cout <<endl<<endl;
 
+    Queen q(false);
+    vector<int> q_attacked_squares = q.getAttackedSquares(d4);
+    cout << "Queen on d4 attacks ";
+    for (int i = 0; i < q_attacked_squares.size(); i++) {
+        cout << q_attacked_squares.at(i) << ", ";
+    }
+    cout <<endl<<endl;
+
+    Bishop b(false);
+    vector<int> b_attacked_squares = b.getAttackedSquares(d4);
+    cout << "Bishop on d4 attacks ";
+    for (int i = 0; i < b_attacked_squares.size(); i++) {
+        cout << b_attacked_squares.at(i) << ", ";
+    }
+    cout <<endl<<endl;
+
+    King ki(false);
+    vector<int> ki_attacked_squares = ki.getAttackedSquares(d4);
+    cout << "King on d4 attacks ";
+    for (int i = 0; i < ki_attacked_squares.size(); i++) {
+        cout << ki_attacked_squares.at(i) << ", ";
+    }
+    cout <<endl<<endl;
 
     return 0;
 }
