@@ -20,8 +20,9 @@ enum squares {
 
 int main () {
     cout << "Standard setup" << endl;
-    Board board(false);
+    Board board(true);
     board.printBoard();
+    cout <<"Attacked squares" << endl;
     board.printAttackedSquares(true);
 
     Knight k(false);
