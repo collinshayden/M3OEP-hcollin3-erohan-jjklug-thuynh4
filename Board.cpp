@@ -57,7 +57,15 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
+    else {
+        board.at(d5) = unique_ptr<Piece>(make_unique<Rook>(true));
+    }
 }
+
+void Board::setBoard(int index, unique_ptr<Piece> new_piece) {
+    *board.at(index) = *new_piece;
+}
+
 
 //finds the king location
 int Board::getKingIndex(bool side) {
@@ -171,6 +179,8 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
 
     return legal_moves;
 }
+
+
 
 
 

@@ -2,7 +2,7 @@
 #include "Board.h"
 #include <iomanip>
 #include <iostream>
-#include "pieces/King.h"
+#include "pieces/pieceClasses.h"
 
 using namespace std;
 
@@ -19,9 +19,18 @@ enum squares {
 };
 
 int main () {
-    Board board(true);
+    cout << "Standard setup" << endl;
+    Board board(false);
     board.printBoard();
     board.printAttackedSquares(true);
+
+
+//    cout << "Testing Knight moves" << endl;
+//    Board board2(false);
+//    board2.setBoard(d5, unique_ptr<Piece>(make_unique<Knight>(true)));
+//    board2.printBoard();
+//    board2.printAttackedSquares(true);
+
 
     return 0;
 }

@@ -14,7 +14,9 @@ public:
     // Constructor
     Board(bool setup);
 
-    //Setter
+    //Setters
+    void setBoard(int index, unique_ptr<Piece> new_piece);
+
     void move(int init_pos, int target_pos);
 
     int getKingIndex(bool side);
