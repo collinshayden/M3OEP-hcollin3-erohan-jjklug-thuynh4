@@ -22,6 +22,17 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
+//array to convert from index to cord
+string square_to_coords[] = {
+        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "i8", "j8", "k8", "l8", "m8", "n8", "o8", "p8",
+        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "i7", "j7", "k7", "l7", "m7", "n7", "o7", "p7",
+        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "i6", "j6", "k6", "l6", "m6", "n6", "o6", "p6",
+        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "i5", "j5", "k5", "l5", "m5", "n5", "o5", "p5",
+        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "i4", "j4", "k4", "l4", "m4", "n4", "o4", "p4",
+        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "i3", "j3", "k3", "l3", "m3", "n3", "o3", "p3",
+        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2", "m2", "n2", "o2", "p2",
+        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
+};
 
 Board::Board(bool setup) {
     //starting with empty board
@@ -58,11 +69,32 @@ Board::Board(bool setup) {
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
     else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
     }
 }
 
-void Board::setBoard(int index, unique_ptr<Piece> new_piece) {
+vector<unique_ptr<Piece>> Board::getBoard() {
+    vector<unique_ptr<Piece>> board_copy;
+    for (int i = 0; i < board.size(); i++) {
+        board_copy.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
+        *board_copy.at(i) = *board.at(i);
+    }
+    return board_copy;
+}
+
+bool Board::setBoard(vector<unique_ptr<Piece>> new_board) {
+    if (board.size() == new_board.size()) {
+        board.clear();
+        for (int i = 0; i < new_board.size(); i++) {
+            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
+            *board.at(i) = *new_board.at(i);
+        }
+        return true;
+    }
+    return false;
+}
+
+void Board::setPiece(int index, unique_ptr<Piece> new_piece) {
     *board.at(index) = *new_piece;
 }
 
@@ -90,6 +122,53 @@ void Board::move(int init_pos, int target_pos) {
     board.at(target_pos)->hasMoved = true;
     //set initial position to empty
     board.at(init_pos) = unique_ptr<Piece>(make_unique<Empty>(true));
+}
+
+//find the attacked squares of a side
+vector<int> Board::getAttackedSquares(bool side) {
+    vector<int> all_attacked_squares;
+    vector<int> piece_attacked_squares;
+//
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+            if (!(square & 0x88)) {
+                if (board.at(square)->side == side) {
+                    piece_attacked_squares = board.at(square)->getAttackedSquares(square);
+                    all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares),
+                                                end(piece_attacked_squares));
+                }
+            }
+        }
+    }
+    return all_attacked_squares;
+}
+
+//determines legal moves for given side
+map<int, vector<int>> Board::getLegalMoves(bool side) {
+    map<int, vector<int>> legal_moves;
+    vector<int> opp_attacked_squares = getAttackedSquares(!side);
+    int king_index = getKingIndex(side);
+
+    vector<unique_ptr<Piece>> temp_board = getBoard();
+    move(d5, c7);
+//    setBoard(temp_board);
+
+
+
+//    for (int rank = 0; rank < 8; rank++) {
+//        for (int file = 0; file < 16; file++) {
+//            int square = rank * 16 + file;
+//            if (!(square & 0x88)) {
+//                if (board.at(square)->side == side) {
+//                  vector<unique_ptr<Piece>> board_copy(board);
+//
+//                }
+//            }
+//        }
+//    }
+
+    return legal_moves;
 }
 
 //prints unicode representation of board
@@ -139,46 +218,10 @@ void Board::printAttackedSquares(bool side) {
     printf("\n    a b c d e f g h\n");
 }
 
-//find the attacked squares of a side
-vector<int> Board::getAttackedSquares(bool side) {
-    vector<int> all_attacked_squares;
-    vector<int> piece_attacked_squares;
-//
-    for (int rank = 0; rank < 8; rank++) {
-        for (int file = 0; file < 16; file++) {
-            int square = rank * 16 + file;
-            if (!(square & 0x88)) {
-                if (board.at(square)->side == side) {
-                    piece_attacked_squares = board.at(square)->getAttackedSquares(square);
-                    all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares),
-                                                end(piece_attacked_squares));
-                }
-            }
-        }
-    }
-    return all_attacked_squares;
-}
 
-//determines legal moves for given side
-map<int, vector<int>> Board::getLegalMoves(bool side) {
-    map<int, vector<int>> legal_moves;
-    vector<int> opp_attacked_squares = getAttackedSquares(!side);
-    int king_index = getKingIndex(side);
 
-    for (int rank = 0; rank < 8; rank++) {
-        for (int file = 0; file < 16; file++) {
-            int square = rank * 16 + file;
-            if (!(square & 0x88)) {
-                if (board.at(square)->side == side) {
-                    unique_ptr<Piece> &temp = board.at(square);
 
-                }
-            }
-        }
-    }
 
-    return legal_moves;
-}
 
 
 

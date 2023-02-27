@@ -14,17 +14,24 @@ public:
     // Constructor
     Board(bool setup);
 
-    //Setters
-    void setBoard(int index, unique_ptr<Piece> new_piece);
-
-    void move(int init_pos, int target_pos);
+    //getters
+    vector<unique_ptr<Piece>> getBoard();
 
     int getKingIndex(bool side);
 
+    //Setters
+    bool setBoard(vector<unique_ptr<Piece>> new_board);
+
+    void setPiece(int index, unique_ptr<Piece> new_piece);
+
+    void move(int init_pos, int target_pos);
+
+    //logic
     vector<int> getAttackedSquares(bool side);
 
     map<int, vector<int>> getLegalMoves(bool side);
 
+    //prints
     void printBoard();
 
     void printAttackedSquares(bool side);
