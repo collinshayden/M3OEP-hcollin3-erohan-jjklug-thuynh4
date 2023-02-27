@@ -69,7 +69,8 @@ Board::Board(bool setup) {
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
     else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(d2) = unique_ptr<Piece>(make_unique<Knight>(false));
     }
 }
 
@@ -84,10 +85,10 @@ vector<unique_ptr<Piece>> Board::getBoard() {
 
 bool Board::setBoard(vector<unique_ptr<Piece>> new_board) {
     if (board.size() == new_board.size()) {
-        board.clear();
+//        board.clear();
         for (int i = 0; i < new_board.size(); i++) {
-            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-            *board.at(i) = *new_board.at(i);
+//            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
+//            *board.at(i) = *new_board.at(i);
         }
         return true;
     }

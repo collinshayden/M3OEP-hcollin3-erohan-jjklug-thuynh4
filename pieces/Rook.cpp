@@ -13,7 +13,9 @@ vector<int> Rook::getAttackedSquares(int initial_pos) {
             int target_sq = initial_pos + rook_offsets[i] * j;
             //if the square is on the board
             if (!(target_sq & 0x88)) {
+
                 possible_moves.push_back(target_sq);
+
             }
         }
     }
