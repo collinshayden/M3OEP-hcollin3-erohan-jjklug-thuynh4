@@ -29,11 +29,33 @@ Board::Board(bool setup) {
         board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
     }
 
+    //setting squares to proper pieces, otherwise empty (useful for debugging)
     if (setup) {
-        //setting squares to proper pieces, otherwise empty (useful for debugging)
-        board.at(51) = unique_ptr<Piece>(make_unique<Knight>(true));
-        board.at(116) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(4) = unique_ptr<Piece>(make_unique<King>(false));
+        //black
+        for (int i = a7; i <= h7; i++) {
+            board.at(i) = unique_ptr<Piece>(make_unique<Pawn>(false));
+        }
+        board.at(a8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(b8) = unique_ptr<Piece>(make_unique<Knight>(false));
+        board.at(c8) = unique_ptr<Piece>(make_unique<Bishop>(false));
+        board.at(d8) = unique_ptr<Piece>(make_unique<Queen>(false));
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(f8) = unique_ptr<Piece>(make_unique<Bishop>(false));
+        board.at(g8) = unique_ptr<Piece>(make_unique<Knight>(false));
+        board.at(h8) = unique_ptr<Piece>(make_unique<Rook>(false));
+
+        //white
+        for (int i = a2; i <= h2; i++) {
+            board.at(i) = unique_ptr<Piece>(make_unique<Pawn>(false));
+        }
+        board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(b1) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(c1) = unique_ptr<Piece>(make_unique<Bishop>(true));
+        board.at(d1) = unique_ptr<Piece>(make_unique<Queen>(true));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(f1) = unique_ptr<Piece>(make_unique<Bishop>(true));
+        board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
 }
 

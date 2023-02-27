@@ -7,6 +7,7 @@
 
 #include "vector"
 #include "Piece.h"
+#include <map>
 
 class Board {
 public:
