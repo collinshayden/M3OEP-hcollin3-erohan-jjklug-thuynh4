@@ -20,7 +20,7 @@ public:
 
     vector<int> getAttackedSquares(bool side);
 
-    vector<vector<int>> getLegalMoves(bool side);
+    map<int, vector<int>> getLegalMoves(bool side);
 
     void printBoard();
 

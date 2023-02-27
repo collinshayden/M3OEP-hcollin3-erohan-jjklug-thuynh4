@@ -6,6 +6,7 @@
 #include "pieces/pieceClasses.h"
 #include "string"
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -129,13 +130,22 @@ vector<int> Board::getAttackedSquares(bool side) {
 }
 
 //determines legal moves for given side
-vector<vector<int>> Board::getLegalMoves(bool side) {
-    vector<vector<int>> legal_moves;
+map<int, vector<int>> Board::getLegalMoves(bool side) {
+    map<int, vector<int>> legal_moves;
     vector<int> opp_attacked_squares = getAttackedSquares(!side);
     int king_index = getKingIndex(side);
 
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+            if (!(square & 0x88)) {
+                if (board.at(square)->side == side) {
+                    unique_ptr<Piece> &temp = board.at(square);
 
-
+                }
+            }
+        }
+    }
 
     return legal_moves;
 }
