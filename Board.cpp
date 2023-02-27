@@ -9,12 +9,40 @@
 
 using namespace std;
 
+// square encoding
+enum squares {
+    a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
+    a7 = 16,  b7, c7, d7, e7, f7, g7, h7,
+    a6 = 32,  b6, c6, d6, e6, f6, g6, h6,
+    a5 = 48,  b5, c5, d5, e5, f5, g5, h5,
+    a4 = 64,  b4, c4, d4, e4, f4, g4, h4,
+    a3 = 80,  b3, c3, d3, e3, f3, g3, h3,
+    a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
+    a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
+};
+
 Board::Board() {
     for (int j = 0; j < 128; j++) {
-        board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(-1)));
+        board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
     }
 
-    board.at(51) = unique_ptr<Piece>(make_unique<Knight>(1));
+    board.at(51) = unique_ptr<Piece>(make_unique<Knight>(true));
+    board.at(116) = unique_ptr<Piece>(make_unique<King>(true));
+    board.at(4) = unique_ptr<Piece>(make_unique<King>(false));
+}
+
+int Board::getKingIndex(bool side) {
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+            if (!(square & 0x88)) {
+                if (board.at(square)->side == side && board.at(square)->unicode == "♔") {
+                    return square;
+                }
+            }
+        }
+    }
+    return -1;
 }
 
 void Board::move() {
@@ -42,7 +70,7 @@ void Board::printBoard() {
     printf("\n    a b c d e f g h\n");
 }
 
-void Board::printAttackedSquares(int side) {
+void Board::printAttackedSquares(bool side) {
     vector<int> attacked_squares = getAttackedSquares(side);
     printf("\n");
 
@@ -66,7 +94,7 @@ void Board::printAttackedSquares(int side) {
     printf("\n    a b c d e f g h\n");
 }
 
-vector<int> Board::getAttackedSquares(int side) {
+vector<int> Board::getAttackedSquares(bool side) {
     vector<int> all_attacked_squares;
     vector<int> piece_attacked_squares;
 //
@@ -84,3 +112,16 @@ vector<int> Board::getAttackedSquares(int side) {
     }
     return all_attacked_squares;
 }
+
+vector<vector<int>> Board::getLegalMoves(bool side) {
+    vector<vector<int>> legal_moves;
+    vector<int> opp_attacked_squares = getAttackedSquares(!side);
+    int king_index = getKingIndex(side);
+
+
+
+    return legal_moves;
+}
+
+
+

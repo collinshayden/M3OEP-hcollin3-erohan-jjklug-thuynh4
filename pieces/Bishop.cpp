@@ -18,7 +18,7 @@ vector<int> Bishop::getAttackedSquares(int initial_pos) {
     return possible_moves;
 }
 
-Bishop::Bishop(int side) : Piece(side) {
+Bishop::Bishop(bool side) : Piece(side) {
     side ? value = 4 : value = 10;
     unicode = "♗";
 }

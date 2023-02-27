@@ -16,14 +16,18 @@ public:
     //Setter
     void move();
 
-    vector<int> getAttackedSquares(int side);
+    int getKingIndex(bool side);
+
+    vector<int> getAttackedSquares(bool side);
+
+    vector<vector<int>> getLegalMoves(bool side);
 
     void printBoard();
 
-    void printAttackedSquares(int side);
+    void printAttackedSquares(bool side);
+
 private:
     vector<unique_ptr<Piece>> board;
-
 };
 
 

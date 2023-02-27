@@ -9,7 +9,7 @@
 
 class Pawn : public Piece{
 public:
-    Pawn(int side);
+    Pawn(bool side);
     vector<int> getAttackedSquares(int initial_pos) override;
 };
 

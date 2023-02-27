@@ -9,7 +9,7 @@
 
 class King : public Piece{
 public:
-    King(int side);
+    King(bool side);
     vector<int> getAttackedSquares(int initial_pos) override;
 };
 

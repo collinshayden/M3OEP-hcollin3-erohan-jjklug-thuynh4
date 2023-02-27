@@ -9,7 +9,7 @@
 
 class Bishop : public Piece {
 public:
-    Bishop(int side);
+    Bishop(bool side);
     vector<int> getAttackedSquares(int initial_pos) override;
 
 };

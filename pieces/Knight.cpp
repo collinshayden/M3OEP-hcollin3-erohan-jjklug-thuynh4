@@ -18,7 +18,7 @@ vector<int> Knight::getAttackedSquares(int initial_pos) {
     return possible_moves;
 }
 
-Knight::Knight(int side) : Piece(side) {
+Knight::Knight(bool side) : Piece(side) {
     side ? value = 3 : value = 9;
     unicode = "♘";
 }

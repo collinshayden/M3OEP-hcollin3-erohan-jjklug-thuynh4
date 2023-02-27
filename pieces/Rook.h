@@ -9,7 +9,7 @@
 
 class Rook : public Piece{
 public:
-    Rook(int side);
+    Rook(bool side);
     vector<int> getAttackedSquares(int initial_pos) override;
 };
 

@@ -19,7 +19,7 @@ vector<int> Rook::getAttackedSquares(int initial_pos) {
     return possible_moves;
 }
 
-Rook::Rook(int side) : Piece(side) {
+Rook::Rook(bool side) : Piece(side) {
     side ? value = 2 : value = 8;
     unicode = "♖";
 }
