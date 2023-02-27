@@ -16,6 +16,7 @@ vector<int> Queen::getAttackedSquares(int initial_pos) {
             }
         }
     }
+    return possible_moves;
 }
 
 Queen::Queen(int side) : Piece(side) {

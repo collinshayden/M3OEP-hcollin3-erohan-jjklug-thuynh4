@@ -2,16 +2,16 @@
 #include "Board.h"
 #include <iomanip>
 #include <iostream>
-#include "pieces/Queen.h"
+#include "pieces/King.h"
 
 using namespace std;
 
 int main () {
     Board board;
     board.printBoard();
-//    board.printAttackedSquares(true);
-
-    Queen q = Queen(1);
-
+    board.printAttackedSquares(true);
+    King k = King(1);
+    vector<int> v = k.getAttackedSquares(51);
+    cout << v.size() << endl;
     return 0;
 }

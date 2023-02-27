@@ -16,11 +16,11 @@ public:
     //Setter
     void move();
 
-    vector<int> getAttackedSquares(bool side);
+    vector<int> getAttackedSquares(int side);
 
     void printBoard();
 
-    void printAttackedSquares(bool side);
+    void printAttackedSquares(int side);
 private:
     vector<unique_ptr<Piece>> board;
 

@@ -9,7 +9,7 @@ vector<int> King::getAttackedSquares(int initial_pos) {
     int king_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};
     for (int i = 0; i < 8; i++) {
         int target_sq = initial_pos + king_offsets[i];
-        if (!(target_sq) & 0x88) {
+        if (!(target_sq & 0x88)) {
             possible_moves.push_back(target_sq);
         }
     }
