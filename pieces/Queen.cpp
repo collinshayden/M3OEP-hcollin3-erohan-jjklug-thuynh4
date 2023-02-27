@@ -6,6 +6,7 @@
 
 vector<int> Queen::getAttackedSquares(int initial_pos) {
     vector<int> possible_moves;
+    //index offsets for queen moves in 1x128 board representation
     int queen_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};
     for (int i = 0; i < 8; i++) {
         for (int j = 1; j < 8; j++) {

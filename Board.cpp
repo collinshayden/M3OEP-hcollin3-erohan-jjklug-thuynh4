@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// square encoding
+// enum that lets us easily convert between algebraic coordinates and indices
 enum squares {
     a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
     a7 = 16,  b7, c7, d7, e7, f7, g7, h7,
@@ -21,16 +21,22 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
-Board::Board() {
+
+Board::Board(bool setup) {
+    //starting with empty board
     for (int j = 0; j < 128; j++) {
         board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
     }
 
-    board.at(51) = unique_ptr<Piece>(make_unique<Knight>(true));
-    board.at(116) = unique_ptr<Piece>(make_unique<King>(true));
-    board.at(4) = unique_ptr<Piece>(make_unique<King>(false));
+    if (setup) {
+        //setting squares to proper pieces, otherwise empty (useful for debugging)
+        board.at(51) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(116) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(4) = unique_ptr<Piece>(make_unique<King>(false));
+    }
 }
 
+//finds the king location
 int Board::getKingIndex(bool side) {
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 16; file++) {
@@ -45,10 +51,12 @@ int Board::getKingIndex(bool side) {
     return -1;
 }
 
+//not yet implemented
 void Board::move() {
 
 }
 
+//prints unicode representation of board
 void Board::printBoard() {
     // print new line
     printf("\n");
@@ -70,6 +78,7 @@ void Board::printBoard() {
     printf("\n    a b c d e f g h\n");
 }
 
+//prints attacked squares of a side as x
 void Board::printAttackedSquares(bool side) {
     vector<int> attacked_squares = getAttackedSquares(side);
     printf("\n");
@@ -94,6 +103,7 @@ void Board::printAttackedSquares(bool side) {
     printf("\n    a b c d e f g h\n");
 }
 
+//find the attacked squares of a side
 vector<int> Board::getAttackedSquares(bool side) {
     vector<int> all_attacked_squares;
     vector<int> piece_attacked_squares;
@@ -113,6 +123,7 @@ vector<int> Board::getAttackedSquares(bool side) {
     return all_attacked_squares;
 }
 
+//determines legal moves for given side
 vector<vector<int>> Board::getLegalMoves(bool side) {
     vector<vector<int>> legal_moves;
     vector<int> opp_attacked_squares = getAttackedSquares(!side);

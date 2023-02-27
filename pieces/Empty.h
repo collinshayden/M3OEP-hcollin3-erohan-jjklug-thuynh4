@@ -7,6 +7,7 @@
 
 #include "../Piece.h"
 
+//Piece class to represent empty squares
 class Empty : public Piece {
 public:
     Empty(bool side);

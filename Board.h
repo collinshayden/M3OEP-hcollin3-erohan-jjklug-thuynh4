@@ -11,7 +11,7 @@
 class Board {
 public:
     // Constructor
-    Board();
+    Board(bool setup);
 
     //Setter
     void move();

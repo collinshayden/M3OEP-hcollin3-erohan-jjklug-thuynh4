@@ -19,7 +19,7 @@ enum squares {
 };
 
 int main () {
-    Board board;
+    Board board(false);
     board.printBoard();
     board.printAttackedSquares(true);
 
