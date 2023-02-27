@@ -19,12 +19,9 @@ enum squares {
 };
 
 int main () {
-    Board board(false);
+    Board board(true);
     board.printBoard();
     board.printAttackedSquares(true);
-
-
-    cout << e4 << endl;
 
     return 0;
 }

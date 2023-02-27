@@ -14,7 +14,7 @@ public:
     Board(bool setup);
 
     //Setter
-    void move();
+    void move(int init_pos, int target_pos);
 
     int getKingIndex(bool side);
 

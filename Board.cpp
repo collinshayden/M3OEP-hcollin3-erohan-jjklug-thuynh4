@@ -52,8 +52,13 @@ int Board::getKingIndex(bool side) {
 }
 
 //not yet implemented
-void Board::move() {
-
+void Board::move(int init_pos, int target_pos) {
+    //set piece of target square to piece of initial square
+    *board.at(target_pos) = *board.at(init_pos);
+    //alter hasMoved value
+    board.at(target_pos)->hasMoved = true;
+    //set initial position to empty
+    board.at(init_pos) = unique_ptr<Piece>(make_unique<Empty>(true));
 }
 
 //prints unicode representation of board
@@ -128,6 +133,7 @@ vector<vector<int>> Board::getLegalMoves(bool side) {
     vector<vector<int>> legal_moves;
     vector<int> opp_attacked_squares = getAttackedSquares(!side);
     int king_index = getKingIndex(side);
+
 
 
 
