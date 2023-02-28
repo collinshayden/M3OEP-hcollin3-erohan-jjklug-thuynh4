@@ -5,17 +5,17 @@
 #include "King.h"
 
 vector<int> King::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
-    vector<int> possible_moves;
+    vector<int> attacked_squares;
     //index offsets for king moves in 1x128 board representation
     int king_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};
     for (int i = 0; i < 8; i++) {
         int target_sq = initial_pos + king_offsets[i];
         //if the square is on the board
         if (!(target_sq & 0x88)) {
-            possible_moves.push_back(target_sq);
+            attacked_squares.push_back(target_sq);
         }
     }
-    return possible_moves;
+    return attacked_squares;
 }
 
 King::King(bool side) : Piece(side) {

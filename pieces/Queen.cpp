@@ -5,7 +5,7 @@
 #include "Queen.h"
 
 vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
-    vector<int> possible_moves;
+    vector<int> attacked_squares;
     //index offsets for queen moves in 1x128 board representation
     int queen_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};
     for (int i = 0; i < 8; i++) {
@@ -15,18 +15,18 @@ vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>>
             if (!(target_sq & 0x88)) {
                 if (board.at(target_sq)->unicode != ".") {
                     if (board.at(initial_pos)->side != board.at(target_sq)->side) {
-                        possible_moves.push_back(target_sq);
+                        attacked_squares.push_back(target_sq);
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    possible_moves.push_back(target_sq);
+                    attacked_squares.push_back(target_sq);
                 }
             }
         }
     }
-    return possible_moves;
+    return attacked_squares;
 }
 
 Queen::Queen(bool side) : Piece(side) {

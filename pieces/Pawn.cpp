@@ -5,26 +5,26 @@
 #include "Pawn.h"
 
 vector<int> Pawn::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
-    vector<int> possible_moves;
+    vector<int> attacked_squares;
     //white pawns
-    if (side) {
+    if (!side) {
         if (!((initial_pos + 17) & 0x88)) {
-            possible_moves.push_back(initial_pos + 17);
+            attacked_squares.push_back(initial_pos + 17);
         }
         if (!((initial_pos + 15) & 0x88)) {
-            possible_moves.push_back(initial_pos + 15);
+            attacked_squares.push_back(initial_pos + 15);
         }
     }
         //black pawns
     else {
         if (!((initial_pos - 17) & 0x88)) {
-            possible_moves.push_back(initial_pos - 17);
+            attacked_squares.push_back(initial_pos - 17);
         }
         if (!((initial_pos - 15) & 0x88)) {
-            possible_moves.push_back(initial_pos - 15);
+            attacked_squares.push_back(initial_pos - 15);
         }
     }
-    return possible_moves;
+    return attacked_squares;
 }
 
 Pawn::Pawn(bool side) : Piece(side) {

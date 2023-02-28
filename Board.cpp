@@ -57,7 +57,7 @@ Board::Board(bool setup) {
 
         //white
         for (int i = a2; i <= h2; i++) {
-            board.at(i) = unique_ptr<Piece>(make_unique<Pawn>(false));
+            board.at(i) = unique_ptr<Piece>(make_unique<Pawn>(true));
         }
         board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
         board.at(b1) = unique_ptr<Piece>(make_unique<Knight>(true));
@@ -68,8 +68,8 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Bishop>(true));
-        board.at(e6) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(d4) = unique_ptr<Piece>(make_unique<Pawn>(true));
+//        board.at(e6) = unique_ptr<Piece>(make_unique<Knight>(true));
     }
 }
 

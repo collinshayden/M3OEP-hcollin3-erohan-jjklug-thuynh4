@@ -5,7 +5,7 @@
 #include "Rook.h"
 
 vector<int> Rook::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
-    vector<int> possible_moves;
+    vector<int> attacked_squares;
     //index offsets for rook moves in 1x128 board representation
     int rook_offsets[4] = {16, -16, 1, -1};
     for (int i = 0; i < 4; i++) {
@@ -15,18 +15,18 @@ vector<int> Rook::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> 
             if (!(target_sq & 0x88)) {
                 if (board.at(target_sq)->unicode != ".") {
                     if (board.at(initial_pos)->side != board.at(target_sq)->side) {
-                        possible_moves.push_back(target_sq);
+                        attacked_squares.push_back(target_sq);
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    possible_moves.push_back(target_sq);
+                    attacked_squares.push_back(target_sq);
                 }
             }
         }
     }
-    return possible_moves;
+    return attacked_squares;
 }
 
 Rook::Rook(bool side) : Piece(side) {
