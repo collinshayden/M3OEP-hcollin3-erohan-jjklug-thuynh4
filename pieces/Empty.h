@@ -11,7 +11,8 @@
 class Empty : public Piece {
 public:
     Empty(bool side);
-    vector<int> getAttackedSquares(int initial_pos) override;
+
+    vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 };
 
 

@@ -4,7 +4,7 @@
 
 #include "King.h"
 
-vector<int> King::getAttackedSquares(int initial_pos) {
+vector<int> King::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> possible_moves;
     //index offsets for king moves in 1x128 board representation
     int king_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};

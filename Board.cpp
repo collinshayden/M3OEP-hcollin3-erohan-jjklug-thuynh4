@@ -67,14 +67,11 @@ Board::Board(bool setup) {
         board.at(f1) = unique_ptr<Piece>(make_unique<Bishop>(true));
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
-    }
-    else {
-        board.at(a8) = unique_ptr<Piece>(make_unique<Knight>(true));
-//        board.at(d2) = unique_ptr<Piece>(make_unique<Knight>(false));
+    } else {
+        board.at(d5) = unique_ptr<Piece>(make_unique<Bishop>(true));
+        board.at(e6) = unique_ptr<Piece>(make_unique<Knight>(true));
     }
 }
-
-//dynamic_cast<Child&>(*things[1]).getDecision()
 
 vector<unique_ptr<Piece>> Board::getBoard() {
     vector<unique_ptr<Piece>> board_copy;
@@ -104,31 +101,37 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     return false;
 }
 
-void Board::setPiece(vector<unique_ptr<Piece>> &new_board,int index, bool side, bool hasMoved, string unicode) {
+void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const string& unicode) {
     if (unicode == ".") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
-    }
-    else if (unicode == "♙") {
+    } else if (unicode == "♙") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Pawn>(side));
-    }
-    else if (unicode == "♖") {
+    } else if (unicode == "♖") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Rook>(side));
-    }
-    else if (unicode == "♘") {
+    } else if (unicode == "♘") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Knight>(side));
-    }
-    else if (unicode == "♗") {
+    } else if (unicode == "♗") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Bishop>(side));
-    }
-    else if (unicode == "♕") {
+    } else if (unicode == "♕") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Queen>(side));
-    }
-    else if (unicode == "♔") {
+    } else if (unicode == "♔") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<King>(side));
     }
     new_board.at(index)->hasMoved = hasMoved;
 }
 
+
+
+//moves a piece and sets original index to empty
+void Board::move(int init_pos, int target_pos) {
+    bool side = board.at(init_pos)->side;
+    string unicode = board.at(init_pos)->unicode;
+
+    //set new pos to piece
+    setPiece(board, target_pos, side, true, unicode);
+    //set initial position to empty
+    setPiece(board, init_pos, true, true, ".");
+}
 
 //finds the king location
 int Board::getKingIndex(bool side) {
@@ -145,18 +148,6 @@ int Board::getKingIndex(bool side) {
     return -1;
 }
 
-//not yet implemented
-void Board::move(int init_pos, int target_pos) {
-    //set piece of target square to piece of initial square
-    bool side = board.at(init_pos)->side;
-    string unicode = board.at(init_pos)->unicode;
-
-    //set new pos to piece
-    setPiece(board, target_pos, side, true, unicode);
-    //set initial position to empty
-    setPiece(board, init_pos, true, true, ".");
-}
-
 //find the attacked squares of a side
 vector<int> Board::getAttackedSquares(bool side) {
     vector<int> all_attacked_squares;
@@ -167,7 +158,7 @@ vector<int> Board::getAttackedSquares(bool side) {
             int square = rank * 16 + file;
             if (!(square & 0x88)) {
                 if (board.at(square)->side == side) {
-                    piece_attacked_squares = board.at(square)->getAttackedSquares(square);
+                    piece_attacked_squares = board.at(square)->getAttackedSquares(square, board);
                     all_attacked_squares.insert(end(all_attacked_squares), begin(piece_attacked_squares),
                                                 end(piece_attacked_squares));
                 }
@@ -184,14 +175,6 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     int king_index = getKingIndex(side);
 
     vector<unique_ptr<Piece>> temp_board = getBoard();
-    move(a8, c7);
-    printBoard();
-    printAttackedSquares(true);
-
-    setBoard(temp_board);
-    printBoard();
-    printAttackedSquares(true);
-
 
 
 //    for (int rank = 0; rank < 8; rank++) {

@@ -10,7 +10,7 @@ Bishop::Bishop(bool side) : Piece(side) {
 }
 
 
-vector<int> Bishop::getAttackedSquares(int initial_pos) {
+vector<int> Bishop::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> possible_moves;
     //index offsets for bishop moves in 1x128 board representation
     int bishop_offsets[4] = {15, -15, 17, -17};
@@ -19,7 +19,16 @@ vector<int> Bishop::getAttackedSquares(int initial_pos) {
             int target_sq = initial_pos + bishop_offsets[i] * j;
             //in a 1x128 board representation, below is a quick way to check if a square is on the board
             if (!(target_sq & 0x88)) {
-                possible_moves.push_back(target_sq);
+                if (board.at(target_sq)->unicode != ".") {
+                    if (board.at(initial_pos)->side != board.at(target_sq)->side) {
+                        possible_moves.push_back(target_sq);
+                        break;
+                    } else {
+                        break;
+                    }
+                } else {
+                    possible_moves.push_back(target_sq);
+                }
             }
         }
     }

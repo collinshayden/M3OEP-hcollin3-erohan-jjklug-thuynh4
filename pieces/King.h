@@ -7,11 +7,11 @@
 
 #include "../Piece.h"
 
-class King : public Piece{
+class King : public Piece {
 public:
     King(bool side);
-    vector<int> getAttackedSquares(int initial_pos) override;
-};
 
+    vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
+};
 
 #endif //M1OEP_HCOLLIN3_KING_H

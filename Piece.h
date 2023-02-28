@@ -4,6 +4,7 @@
 
 #ifndef M1OEP_HCOLLIN3_PIECE_H
 #define M1OEP_HCOLLIN3_PIECE_H
+
 #include "string"
 #include "vector"
 
@@ -14,7 +15,7 @@ class Piece {
 public:
     Piece(int side);
 
-    virtual vector<int> getAttackedSquares(int index);
+    virtual vector<int> getAttackedSquares(int index, vector<unique_ptr<Piece>> &board);
 
     int side; // 1 for white, 0 for black, -1 for empty/offboard
     bool hasMoved;

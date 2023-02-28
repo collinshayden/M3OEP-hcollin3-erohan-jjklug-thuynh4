@@ -11,12 +11,6 @@ Piece::Piece(int color) {
     side = color;
 }
 
-vector<int> Piece::getAttackedSquares(int index) {
+vector<int> Piece::getAttackedSquares(int index, vector<unique_ptr<Piece>> &board) {
     return vector<int>{};
 }
-
-//vector<int> Piece::getAttackedSquares(int index) {
-//    return vector<int>(-1);
-//}
-
-

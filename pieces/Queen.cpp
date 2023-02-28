@@ -4,7 +4,7 @@
 
 #include "Queen.h"
 
-vector<int> Queen::getAttackedSquares(int initial_pos) {
+vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> possible_moves;
     //index offsets for queen moves in 1x128 board representation
     int queen_offsets[8] = {16, -16, 1, -1, 15, -15, 17, -17};
@@ -13,7 +13,16 @@ vector<int> Queen::getAttackedSquares(int initial_pos) {
             int target_sq = initial_pos + queen_offsets[i] * j;
             //if the square is on the board
             if (!(target_sq & 0x88)) {
-                possible_moves.push_back(target_sq);
+                if (board.at(target_sq)->unicode != ".") {
+                    if (board.at(initial_pos)->side != board.at(target_sq)->side) {
+                        possible_moves.push_back(target_sq);
+                        break;
+                    } else {
+                        break;
+                    }
+                } else {
+                    possible_moves.push_back(target_sq);
+                }
             }
         }
     }

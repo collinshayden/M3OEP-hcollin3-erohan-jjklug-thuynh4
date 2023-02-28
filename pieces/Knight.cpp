@@ -4,7 +4,7 @@
 
 #include "Knight.h"
 
-vector<int> Knight::getAttackedSquares(int initial_pos) {
+vector<int> Knight::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     //index offsets for knight moves in 1x128 board representation
     vector<int> possible_moves;
     int knight_offsets[8] = {33, 31, 18, 14, -33, -31, -18, -14};

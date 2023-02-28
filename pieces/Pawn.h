@@ -7,11 +7,11 @@
 
 #include "../Piece.h"
 
-class Pawn : public Piece{
+class Pawn : public Piece {
 public:
     Pawn(bool side);
-    vector<int> getAttackedSquares(int initial_pos) override;
-};
 
+    vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
+};
 
 #endif //M1OEP_HCOLLIN3_PAWN_H

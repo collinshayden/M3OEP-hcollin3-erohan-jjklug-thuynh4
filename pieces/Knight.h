@@ -7,12 +7,12 @@
 
 #include "../Piece.h"
 
-class Knight : public Piece{
+class Knight : public Piece {
 public:
     Knight(bool side);
-    vector<int> getAttackedSquares(int initial_pos) override;
+
+    vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 
 };
-
 
 #endif //M1OEP_HCOLLIN3_KNIGHT_H

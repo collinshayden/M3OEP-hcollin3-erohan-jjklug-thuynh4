@@ -4,7 +4,7 @@
 
 #include "Pawn.h"
 
-vector<int> Pawn::getAttackedSquares(int initial_pos) {
+vector<int> Pawn::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> possible_moves;
     //white pawns
     if (side) {
@@ -15,7 +15,7 @@ vector<int> Pawn::getAttackedSquares(int initial_pos) {
             possible_moves.push_back(initial_pos + 15);
         }
     }
-    //black pawns
+        //black pawns
     else {
         if (!((initial_pos - 17) & 0x88)) {
             possible_moves.push_back(initial_pos - 17);

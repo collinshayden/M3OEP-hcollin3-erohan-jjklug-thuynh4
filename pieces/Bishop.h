@@ -10,9 +10,9 @@
 class Bishop : public Piece {
 public:
     Bishop(bool side);
-    vector<int> getAttackedSquares(int initial_pos) override;
+
+    vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 
 };
-
 
 #endif //M1OEP_HCOLLIN3_BISHOP_H
