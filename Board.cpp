@@ -68,8 +68,8 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Pawn>(true));
-        board.at(e6) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(h2) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(a3) = unique_ptr<Piece>(make_unique<Rook>(false));
 //        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
@@ -102,7 +102,7 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     return false;
 }
 
-void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const string& unicode) {
+void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const string &unicode) {
     if (unicode == ".") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
     } else if (unicode == "♙") {
@@ -219,13 +219,34 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                                     //if pawn hasn't moved, it can move two squares
                                     if (!board.at(square)->hasMoved) {
                                         target_sq -= 16; //two squares
-                                        if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
+                                        //if the pawn is on the second rank, target square is on board, and the squares in front are empty
+                                        //pawn can move two squares
+                                        if (square >= a2 && square <= h2 && !(target_sq & 0x88) &&
+                                            board.at(target_sq)->unicode == ".") {
                                             if (checkLegalMove(square, target_sq)) {
                                                 legal_moves[square].push_back(target_sq);
-                                            }//TODO check that pawns are on 2nd rank, implement black
+                                            }
                                         }
                                     }
-
+                                }
+                            } else {
+                                int target_sq = square + 16;//white pawn moves up one square
+                                if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
+                                    if (checkLegalMove(square, target_sq)) {
+                                        legal_moves[square].push_back(target_sq);
+                                    }
+                                    //if pawn hasn't moved, it can move two squares
+                                    if (!board.at(square)->hasMoved) {
+                                        target_sq += 16; //two squares
+                                        //if the pawn is on the second rank, target square is on board, and the squares in front are empty
+                                        //pawn can move two squares
+                                        if (square >= a7 && square <= h7 && !(target_sq & 0x88) &&
+                                            board.at(target_sq)->unicode == ".") {
+                                            if (checkLegalMove(square, target_sq)) {
+                                                legal_moves[square].push_back(target_sq);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } else {
@@ -292,8 +313,7 @@ void Board::printLegalMoves(bool side) {
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     vector<int> legal_destinations;
 
-    for(const auto& elem : legal_moves)
-    {
+    for (const auto &elem: legal_moves) {
         for (int i = 0; i < elem.second.size(); i++) {
             legal_destinations.push_back(elem.second.at(i));
         }
