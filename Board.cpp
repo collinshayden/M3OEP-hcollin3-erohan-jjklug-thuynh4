@@ -210,8 +210,25 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                                     legal_moves[square].push_back(piece_moves.at(i));
                                 }
                             }
-                        }
-                        else {
+                            if (side) {
+                                int target_sq = square - 16;//white pawn moves up one square
+                                if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
+                                    if (checkLegalMove(square, target_sq)) {
+                                        legal_moves[square].push_back(target_sq);
+                                    }
+                                    //if pawn hasn't moved, it can move two squares
+                                    if (!board.at(square)->hasMoved) {
+                                        target_sq -= 16; //two squares
+                                        if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
+                                            if (checkLegalMove(square, target_sq)) {
+                                                legal_moves[square].push_back(target_sq);
+                                            }//TODO check that pawns are on 2nd rank, implement black
+                                        }
+                                    }
+
+                                }
+                            }
+                        } else {
                             if (checkLegalMove(square, piece_moves.at(i))) {
                                 legal_moves[square].push_back(piece_moves.at(i));
                             }
@@ -221,7 +238,6 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
             }
         }
     }
-
     return legal_moves;
 }
 
