@@ -22,7 +22,17 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
-
+//array to convert from index to cord
+string square_to_coords[] = {
+        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "i8", "j8", "k8", "l8", "m8", "n8", "o8", "p8",
+        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "i7", "j7", "k7", "l7", "m7", "n7", "o7", "p7",
+        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "i6", "j6", "k6", "l6", "m6", "n6", "o6", "p6",
+        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "i5", "j5", "k5", "l5", "m5", "n5", "o5", "p5",
+        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "i4", "j4", "k4", "l4", "m4", "n4", "o4", "p4",
+        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "i3", "j3", "k3", "l3", "m3", "n3", "o3", "p3",
+        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2", "m2", "n2", "o2", "p2",
+        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
+};
 
 Board::Board(bool setup) {
     //starting with empty board
@@ -58,9 +68,9 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
-        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(e6) = unique_ptr<Piece>(make_unique<Rook>(false));
+//        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
 
@@ -111,17 +121,17 @@ void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side,
     new_board.at(index)->hasMoved = hasMoved;
 }
 
-
-
 //moves a piece and sets original index to empty
 void Board::move(int init_pos, int target_pos) {
     bool side = board.at(init_pos)->side;
     string unicode = board.at(init_pos)->unicode;
 
-    //set new pos to piece
-    setPiece(board, target_pos, side, true, unicode);
-    //set initial position to empty
-    setPiece(board, init_pos, true, true, ".");
+    if (!(target_pos & 0x88)) {
+        //set new pos to piece
+        setPiece(board, target_pos, side, true, unicode);
+        //set initial position to empty
+        setPiece(board, init_pos, true, true, ".");
+    }
 }
 
 //finds the king location
@@ -159,13 +169,29 @@ vector<int> Board::getAttackedSquares(bool side) {
     return all_attacked_squares;
 }
 
+bool Board::checkLegalMove(int init_pos, int new_pos) {
+    bool side = board.at(init_pos)->side;
+    bool legal = false;
+    vector<int> opp_attacked_squares = getAttackedSquares(!side);
+    vector<unique_ptr<Piece>> original_board = getBoard();
+
+    //make that move on the board
+    move(init_pos, new_pos);
+    int king_index = getKingIndex(side);
+
+    //if the resulting position does not have the king in check, it is legal
+    if (find(opp_attacked_squares.begin(), opp_attacked_squares.end(), king_index) == opp_attacked_squares.end()) {
+        legal = true;
+    }
+
+    //reset board
+    setBoard(original_board);
+    return legal;
+}
+
 //determines legal moves for given side
 map<int, vector<int>> Board::getLegalMoves(bool side) {
     map<int, vector<int>> legal_moves;
-    vector<int> opp_attacked_squares = getAttackedSquares(!side);
-    int king_index;
-
-    vector<unique_ptr<Piece>> original_board = getBoard();
 
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 16; file++) {
@@ -176,19 +202,21 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                     //get the possible moves of the piece
                     vector<int> piece_moves = board.at(square)->getAttackedSquares(square, board);
 
+                    //pawns move diagonally to capture only when there is a piece there
                     for (int i = 0; i < piece_moves.size(); i++) {
-                        //make that move on the board
-                        move(square, piece_moves.at(i));
-                        king_index = getKingIndex(side);
-
-                        //if the resulting position does not have the king in check, it is legal
-                        if (find(opp_attacked_squares.begin(), opp_attacked_squares.end(), king_index) == opp_attacked_squares.end()) {
-                            legal_moves[square].push_back(piece_moves.at(i));
+                        if (board.at(square)->unicode == "♙") {
+                            if (board.at(piece_moves.at(i))->unicode != ".") {
+                                if (checkLegalMove(square, piece_moves.at(i))) {
+                                    legal_moves[square].push_back(piece_moves.at(i));
+                                }
+                            }
                         }
-                        //reset board to original state
-                        setBoard(original_board);
+                        else {
+                            if (checkLegalMove(square, piece_moves.at(i))) {
+                                legal_moves[square].push_back(piece_moves.at(i));
+                            }
+                        }
                     }
-
                 }
             }
         }
@@ -243,6 +271,42 @@ void Board::printAttackedSquares(bool side) {
     }
     printf("\n    a b c d e f g h\n");
 }
+
+void Board::printLegalMoves(bool side) {
+    map<int, vector<int>> legal_moves = getLegalMoves(side);
+    vector<int> legal_destinations;
+
+    for(const auto& elem : legal_moves)
+    {
+        for (int i = 0; i < elem.second.size(); i++) {
+            legal_destinations.push_back(elem.second.at(i));
+        }
+    }
+
+    printf("\n");
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 16; file++) {
+            int square = rank * 16 + file;
+
+            if (file == 0) {
+                printf(" %d  ", 8 - rank);
+            }
+            if (!(square & 0x88)) {
+                if (find(legal_destinations.begin(), legal_destinations.end(), square) != legal_destinations.end()) {
+                    printf("x ");
+                } else {
+                    printf(". ");
+                }
+            }
+        }
+        printf("\n");
+    }
+    printf("\n    a b c d e f g h\n");
+}
+
+
+
+
 
 
 

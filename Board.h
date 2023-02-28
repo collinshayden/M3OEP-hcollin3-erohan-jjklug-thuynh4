@@ -29,12 +29,16 @@ public:
     //logic
     vector<int> getAttackedSquares(bool side);
 
+    bool checkLegalMove(int init_pos, int new_pos);
+
     map<int, vector<int>> getLegalMoves(bool side);
 
     //prints
     void printBoard();
 
     void printAttackedSquares(bool side);
+
+    void printLegalMoves(bool side);
 
 private:
     vector<unique_ptr<Piece>> board;
