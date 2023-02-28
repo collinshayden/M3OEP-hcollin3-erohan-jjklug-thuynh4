@@ -262,6 +262,22 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     return legal_moves;
 }
 
+vector<int> Board::getUserMove(bool side) {
+    string start_str;
+    string end_str;
+    int start_int;
+    int end_int;
+
+    cout << "Enter a starting square (e.g. e2): " << endl;
+    cin >> start_str;
+    cout << "Enter a destination square (e.g. e4): " << endl;
+    cin >> end_str;
+
+
+    string *index = find(square_to_coords->begin(), square_to_coords->end(),start_str) - square_to_coords->begin();
+
+}
+
 //prints unicode representation of board
 void Board::printBoard() {
     // print new line
@@ -339,6 +355,8 @@ void Board::printLegalMoves(bool side) {
     }
     printf("\n    a b c d e f g h\n");
 }
+
+
 
 
 

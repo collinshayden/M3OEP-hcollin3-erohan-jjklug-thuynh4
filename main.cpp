@@ -31,13 +31,16 @@ enum squares {
 //};
 
 int main () {
-    cout << "Standard setup" << endl;
-    Board board(false);
+    cout << "Board" << endl;
+    Board board(true);
     board.printBoard();
-    cout <<"Attacked squares" << endl;
+    cout << endl << "Attacked Squares" << endl;
     board.printAttackedSquares(true);
-    map<int, vector<int>> legal_moves = board.getLegalMoves(true);
+    cout << endl << "Legal Moves" << endl;
+    board.printLegalMoves(true);
 
+
+    map<int, vector<int>> legal_moves = board.getLegalMoves(true);
 //    for(const auto& elem : legal_moves)
 //    {
 //        cout << square_to_coords[elem.first] << " can legally move to ";
@@ -46,7 +49,7 @@ int main () {
 //        }
 //        cout << endl;
 //    }
-    board.printLegalMoves(true);
+
 
 
 }

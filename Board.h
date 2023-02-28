@@ -19,6 +19,8 @@ public:
 
     int getKingIndex(bool side);
 
+    vector<int> getUserMove(bool side);
+
     //Setters
     bool setBoard(vector<unique_ptr<Piece>> &new_board);
 
