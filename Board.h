@@ -22,7 +22,7 @@ public:
     //Setters
     bool setBoard(vector<unique_ptr<Piece>> &new_board);
 
-    void setPiece(int index, unique_ptr<Piece> new_piece);
+    void setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, string unicode);
 
     void move(int init_pos, int target_pos);
 

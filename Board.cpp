@@ -69,38 +69,64 @@ Board::Board(bool setup) {
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
     else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(a8) = unique_ptr<Piece>(make_unique<Knight>(true));
 //        board.at(d2) = unique_ptr<Piece>(make_unique<Knight>(false));
     }
 }
 
+//dynamic_cast<Child&>(*things[1]).getDecision()
+
 vector<unique_ptr<Piece>> Board::getBoard() {
     vector<unique_ptr<Piece>> board_copy;
     for (int i = 0; i < board.size(); i++) {
+        bool side = board.at(i)->side;
+        bool hasMoved = board.at(i)->hasMoved;
+        string unicode = board.at(i)->unicode;
+
         board_copy.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-        if (!(i & 0x88)) {
-            *board_copy.at(i) = *board.at(i);
-        }
+        setPiece(board_copy, i, side, hasMoved, unicode);
+
     }
     return board_copy;
 }
 
 bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     if (board.size() == new_board.size()) {
-        board.clear();
         for (int i = 0; i < new_board.size(); i++) {
-            board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-            if (!(i & 0x88)) {
-                *board.at(i) = *new_board.at(i);
-            }
+            bool side = new_board.at(i)->side;
+            bool hasMoved = new_board.at(i)->hasMoved;
+            string unicode = new_board.at(i)->unicode;
+
+            setPiece(board, i, side, hasMoved, unicode);
         }
         return true;
     }
     return false;
 }
 
-void Board::setPiece(int index, unique_ptr<Piece> new_piece) {
-    *board.at(index) = *new_piece;
+void Board::setPiece(vector<unique_ptr<Piece>> &new_board,int index, bool side, bool hasMoved, string unicode) {
+    if (unicode == ".") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
+    }
+    else if (unicode == "♙") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Pawn>(side));
+    }
+    else if (unicode == "♖") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Rook>(side));
+    }
+    else if (unicode == "♘") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Knight>(side));
+    }
+    else if (unicode == "♗") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Bishop>(side));
+    }
+    else if (unicode == "♕") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<Queen>(side));
+    }
+    else if (unicode == "♔") {
+        new_board.at(index) = std::unique_ptr<Piece>(make_unique<King>(side));
+    }
+    new_board.at(index)->hasMoved = hasMoved;
 }
 
 
@@ -122,11 +148,13 @@ int Board::getKingIndex(bool side) {
 //not yet implemented
 void Board::move(int init_pos, int target_pos) {
     //set piece of target square to piece of initial square
-    *board.at(target_pos) = *board.at(init_pos);
-    //alter hasMoved value
-    board.at(target_pos)->hasMoved = true;
+    bool side = board.at(init_pos)->side;
+    string unicode = board.at(init_pos)->unicode;
+
+    //set new pos to piece
+    setPiece(board, target_pos, side, true, unicode);
     //set initial position to empty
-    board.at(init_pos) = unique_ptr<Piece>(make_unique<Empty>(true));
+    setPiece(board, init_pos, true, true, ".");
 }
 
 //find the attacked squares of a side
@@ -156,8 +184,10 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     int king_index = getKingIndex(side);
 
     vector<unique_ptr<Piece>> temp_board = getBoard();
-    move(d5, c7);
+    move(a8, c7);
     printBoard();
+    printAttackedSquares(true);
+
     setBoard(temp_board);
     printBoard();
     printAttackedSquares(true);
