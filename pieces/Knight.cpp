@@ -19,6 +19,6 @@ vector<int> Knight::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>
 }
 
 Knight::Knight(bool side) : Piece(side) {
-    side ? value = 3 : value = 9;
+    pieceType = 'N';
     unicode = "♘";
 }

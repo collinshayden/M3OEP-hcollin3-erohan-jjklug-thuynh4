@@ -5,8 +5,9 @@
 #include "Bishop.h"
 
 Bishop::Bishop(bool side) : Piece(side) {
-    side ? value = 4 : value = 10;
+    pieceType = 'B';
     unicode = "♗";
+
 }
 
 

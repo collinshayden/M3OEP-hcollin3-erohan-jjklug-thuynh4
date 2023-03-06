@@ -19,8 +19,8 @@ public:
 
     int side; // 1 for white, 0 for black, -1 for empty/offboard
     bool hasMoved;
-    int value;
     string unicode;
+    char pieceType; // P, K (king), Q, R, N (knight), B
 };
 
 

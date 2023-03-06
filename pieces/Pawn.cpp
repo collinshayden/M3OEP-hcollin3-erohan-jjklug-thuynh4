@@ -28,6 +28,6 @@ vector<int> Pawn::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> 
 }
 
 Pawn::Pawn(bool side) : Piece(side) {
-    side ? value = 1 : value = 7;
+    pieceType = 'P';
     unicode = "♙";
 }
