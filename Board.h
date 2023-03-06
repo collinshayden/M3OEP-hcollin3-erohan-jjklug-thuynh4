@@ -46,7 +46,7 @@ public:
 
 private:
     vector<unique_ptr<Piece>> board;
-
+    bool side_to_move;
 
 };
 
