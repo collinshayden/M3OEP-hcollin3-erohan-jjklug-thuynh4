@@ -19,7 +19,9 @@ public:
 
     int getKingIndex(bool side);
 
-    vector<int> getUserMove(bool side);
+    int fileToInt(char c);
+
+    vector<int> getUserMove(bool side, ostream &outs, istream &ins);
 
     //Setters
     bool setBoard(vector<unique_ptr<Piece>> &new_board);
@@ -44,6 +46,8 @@ public:
 
 private:
     vector<unique_ptr<Piece>> board;
+
+
 };
 
 

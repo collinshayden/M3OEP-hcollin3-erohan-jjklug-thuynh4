@@ -24,16 +24,16 @@ enum squares {
 };
 
 //array to convert from index to cord
-string square_to_coords[] = {
-        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "i8", "j8", "k8", "l8", "m8", "n8", "o8", "p8",
-        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "i7", "j7", "k7", "l7", "m7", "n7", "o7", "p7",
-        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "i6", "j6", "k6", "l6", "m6", "n6", "o6", "p6",
-        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "i5", "j5", "k5", "l5", "m5", "n5", "o5", "p5",
-        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "i4", "j4", "k4", "l4", "m4", "n4", "o4", "p4",
-        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "i3", "j3", "k3", "l3", "m3", "n3", "o3", "p3",
-        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2", "m2", "n2", "o2", "p2",
-        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
-};
+//string square_to_coords[] = {
+//        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "i8", "j8", "k8", "l8", "m8", "n8", "o8", "p8",
+//        "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "i7", "j7", "k7", "l7", "m7", "n7", "o7", "p7",
+//        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "i6", "j6", "k6", "l6", "m6", "n6", "o6", "p6",
+//        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "i5", "j5", "k5", "l5", "m5", "n5", "o5", "p5",
+//        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "i4", "j4", "k4", "l4", "m4", "n4", "o4", "p4",
+//        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "i3", "j3", "k3", "l3", "m3", "n3", "o3", "p3",
+//        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2", "m2", "n2", "o2", "p2",
+//        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
+//};
 
 Board::Board(bool setup) {
     //starting with empty board
@@ -69,8 +69,8 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(h2) = unique_ptr<Piece>(make_unique<Pawn>(true));
-        board.at(a3) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+//        board.at(a3) = unique_ptr<Piece>(make_unique<Rook>(false));
 //        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
@@ -263,6 +263,12 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     return legal_moves;
 }
 
+//takes a file character (a-h) and returns integer value (0 indexed)
+int Board::fileToInt(char c) {
+    //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0
+    return c-97;
+}
+
 vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     //variables
     std::string input;
@@ -325,7 +331,7 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                 good = false;
                 outs << "Incorrect move. please enter a legal move: ";
             }
-        }//castle or capture with R or B
+        }//castle or capture with R or N
         else if(input.length() == 5){
             if(input != "O-O-O" && ((input[0] != 'N' && input[0] != 'R' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') || (input[3] != 'x' &&input[3] != 'a' && input[3] != 'b' && input[3] != 'c' && input[3] != 'd' && input[3] != 'e' && input[3] != 'f' && input[3] != 'g' && input[3] != 'h' )||( input[4] != '1' && input[4] != '2' &&input[4] != '3' && input[4] != '4' && input[4] != '5' && input[4] != '6' && input[4] != '7' && input[4] != '8') )){
                 good = false;
@@ -347,7 +353,7 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
             //pawn move
             if(input.length() == 2){
                 piece = 'P';
-                file = findFile(input[0]);
+                file = fileToInt(input[0]);
                 ss << input[1];
                 ss >> rank;
             }
@@ -357,7 +363,7 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                     castle = true;
                 else {
                     piece = input[0];
-                    file = findFile(input[1]);
+                    file = fileToInt(input[1]);
                     ss << input[2];
                     ss >> rank;
                 }
@@ -367,15 +373,15 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
             else if(input.length() == 4){
                 if(input[1] == 'X'){
                     occupied = true;
-                    file = findFile(input[2]);
+                    file = fileToInt(input[2]);
                     piece = input[0];
                     ss << input[3];
                     ss >> rank;
                 }
                 else{
                     piece = input[0];
-                    tieFile = findFile(input[1]);
-                    file = findFile(input[2]);
+                    tieFile = fileToInt(input[1]);
+                    file = fileToInt(input[2]);
                     ss << input[3];
                     ss >> rank;
                 }
@@ -387,46 +393,46 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                 }
                 else{
                     piece = input[0];
-                    tieFile = findFile(input[1]);
-                    file = findFile(input[3]);
+                    tieFile = fileToInt(input[1]);
+                    file = fileToInt(input[3]);
                     ss << input[4];
                     ss >> rank;
                 }
             }
             //if castle, check if the castle is possible
-            if(castle){
-                //TODO castle
-                //kingside
-                if (input == "O-O"){
-                    outs << "\nKingside Castle\n";
-                    move = false;
-                }
-                    //queenside
-                else{
-                    outs << "\nQueenside Castle\n";
-                    move = false;
-                }
-            }
-                //else check if the legal move or capture can occur, if capture, then remove according piece from vector
-            else{
-                outs << "\nYou entered legal move: " << input << "\n";
-                if(tieFile == 0 && (piece == 'N' || piece == 'K' || piece == 'Q' || piece == 'R' || piece == 'B')){
-                    for(int i = 0; i < vector.size(); ++i){
-                        if(vector[i]->getType() == piece){
-                            if(vector[i]->move(Square(file,rank,occupied),board))
-                                move = true;
-                        }
-                    }
-                }
-                else{
-                    for(int i = 0; i < vector.size(); ++i){
-                        if(vector[i]->getType() == piece && vector[i]->getSpace().getFile() == tieFile){
-                            move = vector[i]->move(Square(file,rank,occupied),board);
-                        }
-                    }
-                }
-
-            }
+//            if(castle){
+//                //TODO castle
+//                //kingside
+//                if (input == "O-O"){
+//                    outs << "\nKingside Castle\n";
+//                    move = false;
+//                }
+//                    //queenside
+//                else{
+//                    outs << "\nQueenside Castle\n";
+//                    move = false;
+//                }
+//            }
+//                //else check if the legal move or capture can occur, if capture, then remove according piece from vector
+//            else{
+//                outs << "\nYou entered legal move: " << input << "\n";
+//                if(tieFile == 0 && (piece == 'N' || piece == 'K' || piece == 'Q' || piece == 'R' || piece == 'B')){
+//                    for(int i = 0; i < vector.size(); ++i){
+//                        if(vector[i]->getType() == piece){
+//                            if(vector[i]->move(Square(file,rank,occupied),board))
+//                                move = true;
+//                        }
+//                    }
+//                }
+//                else{
+//                    for(int i = 0; i < vector.size(); ++i){
+//                        if(vector[i]->getType() == piece && vector[i]->getSpace().getFile() == tieFile){
+//                            move = vector[i]->move(Square(file,rank,occupied),board);
+//                        }
+//                    }
+//                }
+//
+//            }
             //if the move did not go through reprompt
             if(!move){
                 good = false;
