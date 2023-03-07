@@ -31,7 +31,7 @@ string square_to_coords[] = {
 };
 int main () {
     cout << "Board" << endl;
-    Board board(true);//true is standard setup, false is custom
+    Board board(false);//true is standard setup, false is custom
     board.printBoard();
     cout << endl << "Attacked Squares" << endl;
     board.printAttackedSquares(true);

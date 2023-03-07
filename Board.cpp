@@ -59,7 +59,7 @@ Board::Board(bool setup) {
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
         board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
-//        board.at(a3) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(c7) = unique_ptr<Piece>(make_unique<Rook>(false));
 //        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
@@ -365,6 +365,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
 
             }
                 //capture or tied move
+                //TODO check board state to see if capture is allowed
             else if (input.length() == 4) {
                 if (input[1] == 'X') {
                     file = fileToInt(input[2]);
