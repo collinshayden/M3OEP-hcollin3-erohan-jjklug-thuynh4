@@ -24,6 +24,7 @@ enum squares {
 };
 
 Board::Board(bool setup) {
+    //array to convert from index to cord
     side_to_move = true;
     //starting with empty board
     for (int j = 0; j < 128; j++) {
@@ -58,7 +59,7 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(d6) = unique_ptr<Piece>(make_unique<Pawn>(true));
         board.at(c7) = unique_ptr<Piece>(make_unique<Rook>(false));
 //        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
@@ -193,53 +194,26 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                     vector<int> piece_moves = board.at(square)->getAttackedSquares(square, board);
 
                     //pawns move diagonally to capture only when there is a piece there
-                    for (int i = 0; i < piece_moves.size(); i++) {
-                        if (board.at(square)->unicode == "♙") {
+                    if (board.at(square)->pieceType == 'P') {
+                        for (int i = 0; i < piece_moves.size(); i++) {
                             if (board.at(piece_moves.at(i))->unicode != ".") {
                                 if (checkLegalMove(square, piece_moves.at(i))) {
                                     legal_moves[square].push_back(piece_moves.at(i));
                                 }
                             }
-                            if (side) {
-                                int target_sq = square - 16;//white pawn moves up one square
-                                if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
-                                    if (checkLegalMove(square, target_sq)) {
-                                        legal_moves[square].push_back(target_sq);
-                                    }
-                                    //if pawn hasn't moved, it can move two squares
-                                    if (!board.at(square)->hasMoved) {
-                                        target_sq -= 16; //two squares
-                                        //if the pawn is on the second rank, target square is on board, and the squares in front are empty
-                                        //pawn can move two squares
-                                        if (square >= a2 && square <= h2 && !(target_sq & 0x88) &&
-                                            board.at(target_sq)->unicode == ".") {
-                                            if (checkLegalMove(square, target_sq)) {
-                                                legal_moves[square].push_back(target_sq);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                int target_sq = square + 16;//white pawn moves up one square
-                                if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
-                                    if (checkLegalMove(square, target_sq)) {
-                                        legal_moves[square].push_back(target_sq);
-                                    }
-                                    //if pawn hasn't moved, it can move two squares
-                                    if (!board.at(square)->hasMoved) {
-                                        target_sq += 16; //two squares
-                                        //if the pawn is on the second rank, target square is on board, and the squares in front are empty
-                                        //pawn can move two squares
-                                        if (square >= a7 && square <= h7 && !(target_sq & 0x88) &&
-                                            board.at(target_sq)->unicode == ".") {
-                                            if (checkLegalMove(square, target_sq)) {
-                                                legal_moves[square].push_back(target_sq);
-                                            }
-                                        }
-                                    }
+                        }
+                        //check pawn pushes
+                        vector<int> pawn_pushes = getPawnPushes(square, side, board);
+                        for (int i = 0; i < pawn_pushes.size(); i++) {
+                            if (board.at(pawn_pushes.at(i))->pieceType == 'E') {
+                                if (checkLegalMove(square, pawn_pushes.at(i))) {
+                                    legal_moves[square].push_back(pawn_pushes.at(i));
                                 }
                             }
-                        } else {
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < piece_moves.size(); i++) {
                             if (checkLegalMove(square, piece_moves.at(i))) {
                                 legal_moves[square].push_back(piece_moves.at(i));
                             }
@@ -527,7 +501,29 @@ void Board::printLegalMoves(bool side) {
 }
 
 void Board::printLegalMovesList(bool side) {
+    map<int, vector<int>> legal_moves = getLegalMoves(side);
+    cout << "The legal moves in this position are: ";
+    for(const auto& elem : legal_moves)
+    {
+        for (int i = 0; i < elem.second.size(); i++) {
+            if (board.at(elem.first)->pieceType == 'P') {
+                if (board.at(elem.second.at(i))->pieceType != 'E') {
+                    cout << square_to_coords[elem.first][0] << "x" << square_to_coords[elem.second.at(i)] << ", ";
+                }
+                else {
+                    cout << square_to_coords[elem.second.at(i)] << ", ";
+                }
+            }
+            else if (board.at(elem.second.at(i))->pieceType != 'E') {
+                cout << board.at(elem.first)->pieceType << "x" << square_to_coords[elem.second.at(i)] << ", ";
+            }
+            else {
+                cout << board.at(elem.first)->pieceType << square_to_coords[elem.second.at(i)] << ", ";
+            }
 
+        }
+        cout << endl;
+    }
 }
 
 
