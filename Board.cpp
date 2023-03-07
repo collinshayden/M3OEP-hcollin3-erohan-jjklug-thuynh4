@@ -270,7 +270,7 @@ int Board::fileToInt(char c) {
     return c-97;
 }
 
-vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
+vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
     //variables
     std::string input;
     bool legal = false;
@@ -281,98 +281,96 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     bool occupied = false;
     char pieceType;
 
-    //ask for move
-    outs << "Please enter a move: ";
-    getline(ins,input);
-
-    while(!legal) {
+    while (!legal) {
         legal = true;
+        //ask for move
+        outs << "Please enter a move: ";
+        getline(ins, input);
+
         //check to see if it is a single input
-        if(!input.empty()) {
-            for (int i = 0; i < input.length(); ++i) {
-                if (isspace(input.at(i)))
+        if (input.empty()) {
+            legal = false;
+            outs << "No input. ";
+        }
+        for (int i = 0; i < input.length(); i++) {
+            if (isspace(input.at(i))) {
+                legal = false;
+            }
+        }
+        if (legal) {
+            //pawn move
+            if (input.length() == 2) {
+                //TODO refactor to input[0] converted to int >=0 and <=7
+                if ((input[0] != 'a' && input[0] != 'b' && input[0] != 'c' && input[0] != 'd' && input[0] != 'e' &&
+                     input[0] != 'f' && input[0] != 'g' && input[0] != 'h') ||
+                    (input[1] != '1' && input[1] != '2' && input[1] != '3' && input[1] != '4' && input[1] != '5' &&
+                     input[1] != '6' && input[1] != '7' && input[1] != '8')) {
                     legal = false;
+                    outs << "Incorrect pawn move. please enter a legal move: ";
+
+                }
             }
-
-            if(!legal){
-                outs << "Invalid input. Enter a single move: ";
-                ins.clear();
-                getline(ins,input);
+                //other move or castle
+            else if (input.length() == 3) {
+                if (((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
+                     (input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' &&
+                      input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
+                     (input[2] != '1' && input[2] != '2' && input[2] != '3' && input[2] != '4' && input[2] != '5' &&
+                      input[2] != '6' && input[2] != '7' && input[2] != '8')) && input != "O-O") {
+                    legal = false;
+                    outs << "Incorrect move. please enter a legal move: ";
+                }
             }
-
-
-        }
-        else{
-            legal = false;
-            outs << "No input. Enter a single move: ";
-            ins.clear();
-            getline(ins,input);
-        }
-
-        //pawn move
-        if(input.length() == 2){
-
-            //TODO refactor to input[0] converted to int >=0 and <=7
-            if((input[0] != 'a' && input[0] != 'b' && input[0] != 'c' && input[0] != 'd' && input[0] != 'e' && input[0] != 'f' && input[0] != 'g' && input[0] != 'h') || (input[1] != '1' && input[1] != '2' && input[1] != '3' && input[1] != '4' && input[1] != '5' && input[1] != '6' && input[1] != '7' && input[1] != '8' )){
-
-                legal = false;
-                outs << "Incorrect pawn move. please enter a legal move: ";
+                //capture or move
+            else if (input.length() == 4) {
+                if ((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
+                    (input[1] != 'x' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' &&
+                     input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
+                    (input[2] != 'a' && input[2] != 'b' && input[2] != 'c' && input[2] != 'd' && input[2] != 'e' &&
+                     input[2] != 'f' && input[2] != 'g' && input[2] != 'h') ||
+                    (input[3] != '1' && input[3] != '2' && input[3] != '3' && input[3] != '4' && input[3] != '5' &&
+                     input[3] != '6' && input[3] != '7' && input[3] != '8')) {
+                    legal = false;
+                    outs << "Incorrect move. please enter a legal move: ";
+                }
+            }
+                //castle or capture with R or N
+            else if (input.length() == 5) {
+                if (input != "O-O-O" &&
+                    ((input[0] != 'N' && input[0] != 'R' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' &&
+                      input[1] != 'd' && input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
+                     (input[3] != 'x' && input[3] != 'a' && input[3] != 'b' && input[3] != 'c' && input[3] != 'd' &&
+                      input[3] != 'e' && input[3] != 'f' && input[3] != 'g' && input[3] != 'h') ||
+                     (input[4] != '1' && input[4] != '2' && input[4] != '3' && input[4] != '4' && input[4] != '5' &&
+                      input[4] != '6' && input[4] != '7' && input[4] != '8'))) {
+                    legal = false;
+                    outs << "Incorrect move. please enter a legal move: ";
+                }
 
             }
-        }//other move - castle
-
-        else if(input.length() == 3) {
-            if (((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
-                 (input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' &&
-                  input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
-                 (input[2] != '1' && input[2] != '2' && input[2] != '3' && input[2] != '4' && input[2] != '5' &&
-                  input[2] != '6' && input[2] != '7' && input[2] != '8')) && input != "O-O") {
-                legal = false;
-                outs << "Incorrect move. please enter a legal move: ";
-            }//capture or move
-        }
-        else if(input.length() == 4) {
-            if((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K' )||(input[1] != 'x' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' &&
-                                                                                                                input[1] != 'd' && input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
-               (input[2] != 'a' && input[2] != 'b' && input[2] != 'c' && input[2] != 'd' && input[2] != 'e' &&
-                input[2] != 'f' && input[2] != 'g' && input[2] != 'h') || (input[3] != '1' && input[3] != '2' &&
-                                                                           input[3] != '3' && input[3] != '4' && input[3] != '5' && input[3] != '6' && input[3] != '7' &&
-                                                                           input[3] != '8')) {
+                //if any single word that is not according lengths
+            else {
                 legal = false;
                 outs << "Incorrect move. please enter a legal move: ";
             }
-        }//castle or capture with R or N
-        else if(input.length() == 5){
-            if(input != "O-O-O" && ((input[0] != 'N' && input[0] != 'R' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') || (input[3] != 'x' &&input[3] != 'a' && input[3] != 'b' && input[3] != 'c' && input[3] != 'd' && input[3] != 'e' && input[3] != 'f' && input[3] != 'g' && input[3] != 'h' )||( input[4] != '1' && input[4] != '2' &&input[4] != '3' && input[4] != '4' && input[4] != '5' && input[4] != '6' && input[4] != '7' && input[4] != '8') )){
-                legal = false;
-                outs << "Incorrect move. please enter a legal move: ";
-            }
-
-        }//if any single word that is not according lengths
-        else{
-            legal = false;
-            outs << "Incorrect move. please enter a legal move: ";
         }
         //if still legal dissect the move, and see if it is a possible move for the piece
-
-        if(legal){
+        if (legal) {
             tieFile = 0;
             castle = false;
             occupied = false;
             std::stringstream ss;
+
             //pawn move
-
-            if(input.length() == 2){
-
+            if (input.length() == 2) {
                 pieceType = 'P';
                 file = fileToInt(input[0]);
                 ss << input[1];
                 ss >> rank;
-
             }
-                //regular move or castle
-            else if(input.length() == 3){
-                if(input == "O-O")
+            //regular move or castle
+            else if (input.length() == 3) {
+                if (input == "O-O")
                     castle = true;
                 else {
                     pieceType = input[0];
@@ -382,16 +380,15 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                 }
 
             }
-                //capture or tied move
-            else if(input.length() == 4){
-                if(input[1] == 'X'){
+            //capture or tied move
+            else if (input.length() == 4) {
+                if (input[1] == 'X') {
                     occupied = true;
                     file = fileToInt(input[2]);
                     pieceType = input[0];
                     ss << input[3];
                     ss >> rank;
-                }
-                else{
+                } else {
                     pieceType = input[0];
                     tieFile = fileToInt(input[1]);
                     file = fileToInt(input[2]);
@@ -399,12 +396,11 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                     ss >> rank;
                 }
             }
-                //castle or tied capture
-            else if(input.length() == 5){
-                if(input == "O-O-O"){
+            //castle or tied capture
+            else if (input.length() == 5) {
+                if (input == "O-O-O") {
                     castle = true;
-                }
-                else{
+                } else {
                     pieceType = input[0];
                     tieFile = fileToInt(input[1]);
                     file = fileToInt(input[3]);
@@ -413,46 +409,32 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                 }
             }
 
-            //if the move did not go through reprompt
-//            if(!move){
-//                legal = false;
-//                cout << "Input not in legal moves: ";
-//                ins.clear();
-//                getline(ins,input);
-//            }
+            //NOTE: the following target_sq assignment may look a bit weird. This is because the board representation has
+            //a8 as index 0, with indices increasing left to right, top to bottom. However, in standard notation,
+            //the ranks increase from whites side (a1 being the first rank) to blacks side (a8 being the 8th rank)
+            //So the following line with (8-rank) simply converts the user given rank (e3 for example) to the rank
+            //corresponding to the board representation
+            int target_sq = (8 - rank) * 16 + file;
+            // check if on board
 
-
-        }//reprompt for any one word answers that were not legal chess moves
-
-        //NOTE: the following target_sq assignment may look a bit weird. This is because the board representation has
-        //a8 as index 0, with indices increasing left to right, top to bottom. However, in standard notation,
-        //the ranks increase from whites side (a1 being the first rank) to blacks side (a8 being the 8th rank)
-        //So the following line with (8-rank) simply converts the user given rank (e3 for example) to the rank
-        //corresponding to the board representation
-        int target_sq = (8-rank) * 16 + file;
-        // check if on board
-
-        if (!(target_sq & 0x88)) {
-
-            map<int, vector<int>> legal_moves = getLegalMoves(side);
-
-            //cycle through starting squares in legal moves
-            for(const auto& elem : legal_moves) {
-                //search legal moves for pieces of the input type
-                if (board.at(elem.first)->pieceType == pieceType) {
-                    //if the given target sq is in the piece's legal moves
-                    if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
-                        return vector<int>{elem.first, target_sq};
-
+            if (!(target_sq & 0x88)) {
+                map<int, vector<int>> legal_moves = getLegalMoves(side);
+                //cycle through starting squares in legal moves
+                for (const auto &elem: legal_moves) {
+                    //search legal moves for pieces of the input type
+                    if (board.at(elem.first)->pieceType == pieceType) {
+                        //if the given target sq is in the piece's legal moves
+                        if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
+                            return vector<int>{elem.first, target_sq};
+                        }
                     }
                 }
             }
         }
-        else{
-            legal = false;
-            ins.clear();
-            getline(ins,input);
-        }
+        legal = false;
+        ins.clear();
+        cout << "Input not in legal moves: ";
+
     }
 }
 
