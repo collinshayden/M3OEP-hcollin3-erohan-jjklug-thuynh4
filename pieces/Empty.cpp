@@ -5,6 +5,7 @@
 #include "Empty.h"
 
 Empty::Empty(bool color) : Piece(color) {
+    pieceType = 'E';
     unicode = ".";
     side = color;
 }

@@ -9,7 +9,6 @@ using namespace std;
 Piece::Piece(int color) {
     hasMoved = false;
     side = color;
-    pieceType = 'e';
 }
 
 vector<int> Piece::getAttackedSquares(int index, vector<unique_ptr<Piece>> &board) {
