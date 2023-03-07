@@ -425,6 +425,17 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
     }
 }
 
+bool Board::makeUserMove(vector<int> moves) {
+    side_to_move = !side_to_move;
+    if (moves.size() == 2) {
+        move(moves.at(0), moves.at(1));
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 //prints unicode representation of board
 void Board::printBoard() {
     // print new line
@@ -502,6 +513,7 @@ void Board::printLegalMoves(bool side) {
     }
     printf("\n    a b c d e f g h\n");
 }
+
 
 
 

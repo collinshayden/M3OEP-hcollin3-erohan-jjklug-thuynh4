@@ -11,10 +11,12 @@
 
 class Board {
 public:
+    bool side_to_move;
+
     // Constructor
     Board(bool setup);
 
-    //getters
+    //Getters
     vector<unique_ptr<Piece>> getBoard();
 
     int getKingIndex(bool side);
@@ -30,7 +32,9 @@ public:
 
     void move(int init_pos, int target_pos);
 
-    //logic
+    bool makeUserMove(vector<int> moves);
+
+    //logic for legality
     vector<int> getAttackedSquares(bool side);
 
     bool checkLegalMove(int init_pos, int new_pos);
@@ -46,7 +50,7 @@ public:
 
 private:
     vector<unique_ptr<Piece>> board;
-    bool side_to_move;
+
 
 };
 

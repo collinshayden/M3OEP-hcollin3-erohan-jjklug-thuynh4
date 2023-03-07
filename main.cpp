@@ -33,20 +33,26 @@ int main () {
     cout << "Board" << endl;
     Board board(false);//true is standard setup, false is custom
     board.printBoard();
-    cout << endl << "Attacked Squares" << endl;
-    board.printAttackedSquares(true);
-    cout << endl << "Legal Moves" << endl;
-    board.printLegalMoves(true);
+//    cout << endl << "Attacked Squares" << endl;
+//    board.printAttackedSquares(true);
+//    cout << endl << "Legal Moves" << endl;
+//    board.printLegalMoves(true);
 
-
-    map<int, vector<int>> legal_moves = board.getLegalMoves(true);
-    for(const auto& elem : legal_moves)
-    {
-        cout << square_to_coords[elem.first] << " can legally move to ";
-        for (int i = 0; i < elem.second.size(); i++) {
-            cout << square_to_coords[elem.second.at(i)] << ", ";
+    while(true) {
+        map<int, vector<int>> legal_moves = board.getLegalMoves(board.side_to_move);
+        for(const auto& elem : legal_moves)
+        {
+            cout << square_to_coords[elem.first] << " can legally move to ";
+            for (int i = 0; i < elem.second.size(); i++) {
+                cout << square_to_coords[elem.second.at(i)] << ", ";
+            }
+            cout << endl;
         }
-        cout << endl;
+        vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
+        board.makeUserMove(moves);
+        board.printBoard();
     }
-    board.getUserMove(true, cout, cin);
+
+
+    //TODO pawn legal moves are doubled?
 }
