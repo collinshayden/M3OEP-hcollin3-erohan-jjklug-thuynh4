@@ -29,7 +29,6 @@ string square_to_coords[] = {
         "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2", "m2", "n2", "o2", "p2",
         "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
 };
-
 int main () {
     cout << "Board" << endl;
     Board board(false);
@@ -40,15 +39,16 @@ int main () {
     board.printLegalMoves(true);
 
 
-//    map<int, vector<int>> legal_moves = board.getLegalMoves(true);
-//    for(const auto& elem : legal_moves)
-//    {
-//        cout << square_to_coords[elem.first] << " can legally move to ";
-//        for (int i = 0; i < elem.second.size(); i++) {
-//            cout << square_to_coords[elem.second.at(i)] << ", ";
-//        }
-//        cout << endl;
-//    }
+    map<int, vector<int>> legal_moves = board.getLegalMoves(true);
+    for(const auto& elem : legal_moves)
+    {
+        cout << square_to_coords[elem.first] << " can legally move to ";
+        for (int i = 0; i < elem.second.size(); i++) {
+            cout << square_to_coords[elem.second.at(i)] << ", ";
+        }
+        cout << endl;
+    }
     board.getUserMove(true, cout, cin);
+
 
 }

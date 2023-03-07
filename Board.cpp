@@ -70,7 +70,7 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(e2) = unique_ptr<Piece>(make_unique<Pawn>(true));
 //        board.at(a3) = unique_ptr<Piece>(make_unique<Rook>(false));
 //        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
@@ -279,11 +279,12 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     int tieFile = 0;
     bool castle = false;
     bool occupied = false;
-    bool move;
     char pieceType;
+
     //ask for move
     outs << "Please enter a move: ";
     getline(ins,input);
+
     while(!legal) {
         legal = true;
         //check to see if it is a single input
@@ -292,11 +293,13 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                 if (isspace(input.at(i)))
                     legal = false;
             }
+
             if(!legal){
                 outs << "Invalid input. Enter a single move: ";
                 ins.clear();
                 getline(ins,input);
             }
+
 
         }
         else{
@@ -305,13 +308,19 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
             ins.clear();
             getline(ins,input);
         }
+
         //pawn move
         if(input.length() == 2){
+
+            //TODO refactor to input[0] converted to int >=0 and <=7
             if((input[0] != 'a' && input[0] != 'b' && input[0] != 'c' && input[0] != 'd' && input[0] != 'e' && input[0] != 'f' && input[0] != 'g' && input[0] != 'h') || (input[1] != '1' && input[1] != '2' && input[1] != '3' && input[1] != '4' && input[1] != '5' && input[1] != '6' && input[1] != '7' && input[1] != '8' )){
+
                 legal = false;
                 outs << "Incorrect pawn move. please enter a legal move: ";
+
             }
         }//other move - castle
+
         else if(input.length() == 3) {
             if (((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
                  (input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' &&
@@ -345,18 +354,21 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
             outs << "Incorrect move. please enter a legal move: ";
         }
         //if still legal dissect the move, and see if it is a possible move for the piece
+
         if(legal){
             tieFile = 0;
             castle = false;
             occupied = false;
-            move = false;
             std::stringstream ss;
             //pawn move
+
             if(input.length() == 2){
+
                 pieceType = 'P';
                 file = fileToInt(input[0]);
                 ss << input[1];
                 ss >> rank;
+
             }
                 //regular move or castle
             else if(input.length() == 3){
@@ -402,24 +414,28 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
             }
 
             //if the move did not go through reprompt
-            if(!move){
-                legal = false;
-                cout << "Input not in legal moves: ";
-                ins.clear();
-                getline(ins,input);
-            }
+//            if(!move){
+//                legal = false;
+//                cout << "Input not in legal moves: ";
+//                ins.clear();
+//                getline(ins,input);
+//            }
 
 
         }//reprompt for any one word answers that were not legal chess moves
-        else{
-            ins.clear();
-            getline(ins,input);
-        }
 
-        int target_sq = rank * 16 + file;
+        //NOTE: the following target_sq assignment may look a bit weird. This is because the board representation has
+        //a8 as index 0, with indices increasing left to right, top to bottom. However, in standard notation,
+        //the ranks increase from whites side (a1 being the first rank) to blacks side (a8 being the 8th rank)
+        //So the following line with (8-rank) simply converts the user given rank (e3 for example) to the rank
+        //corresponding to the board representation
+        int target_sq = (8-rank) * 16 + file;
         // check if on board
-        if (!target_sq & 0x88) {
+
+        if (!(target_sq & 0x88)) {
+
             map<int, vector<int>> legal_moves = getLegalMoves(side);
+
             //cycle through starting squares in legal moves
             for(const auto& elem : legal_moves) {
                 //search legal moves for pieces of the input type
@@ -427,19 +443,17 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
                     //if the given target sq is in the piece's legal moves
                     if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
                         return vector<int>{elem.first, target_sq};
+
                     }
                 }
             }
         }
-        else {
+        else{
             legal = false;
+            ins.clear();
+            getline(ins,input);
         }
-
     }
-
-
-
-
 }
 
 //prints unicode representation of board
