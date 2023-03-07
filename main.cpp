@@ -18,7 +18,7 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
-////array to convert from index to cord
+//array to convert from index to cord
 string square_to_coords[] = {
         "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "i8", "j8", "k8", "l8", "m8", "n8", "o8", "p8",
         "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "i7", "j7", "k7", "l7", "m7", "n7", "o7", "p7",
@@ -31,7 +31,7 @@ string square_to_coords[] = {
 };
 int main () {
     cout << "Board" << endl;
-    Board board(false);
+    Board board(true);//true is standard setup, false is custom
     board.printBoard();
     cout << endl << "Attacked Squares" << endl;
     board.printAttackedSquares(true);
@@ -49,6 +49,4 @@ int main () {
         cout << endl;
     }
     board.getUserMove(true, cout, cin);
-
-
 }
