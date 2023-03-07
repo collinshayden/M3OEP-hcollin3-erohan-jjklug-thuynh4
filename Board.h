@@ -12,6 +12,7 @@
 class Board {
 public:
     bool side_to_move;
+    bool game_end = false;
 
     // Constructor
     Board(bool setup);
@@ -47,6 +48,8 @@ public:
     void printAttackedSquares(bool side);
 
     void printLegalMoves(bool side);
+
+    void printLegalMovesList(bool side);
 
 private:
     vector<unique_ptr<Piece>> board;

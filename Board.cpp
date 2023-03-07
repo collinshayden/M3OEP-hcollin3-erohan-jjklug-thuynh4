@@ -355,6 +355,18 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     file = fileToInt(input[1]);
                     ss << input[2];
                     ss >> rank;
+
+                    //check if it is not a capture
+                    target_sq = (8 - rank) * 16 + file;
+                    if (!(target_sq & 0x88)) {
+                        if (board.at(target_sq)->pieceType != 'E') {
+                            legal = false;
+                        }
+                    }
+                    else {
+                        legal = false;
+                    }
+
                 }
 
             }
@@ -513,6 +525,11 @@ void Board::printLegalMoves(bool side) {
     }
     printf("\n    a b c d e f g h\n");
 }
+
+void Board::printLegalMovesList(bool side) {
+
+}
+
 
 
 
