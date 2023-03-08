@@ -30,6 +30,6 @@ vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>>
 }
 
 Queen::Queen(bool side) : Piece(side) {
-    pieceType = 'Q';
+    piece_type = 'Q';
     unicode = "♕";
 }

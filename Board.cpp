@@ -59,9 +59,9 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d6) = unique_ptr<Piece>(make_unique<Pawn>(true));
-        board.at(c7) = unique_ptr<Piece>(make_unique<Rook>(false));
-//        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(c6) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(b5) = unique_ptr<Piece>(make_unique<Pawn>(true));
     }
 }
 
@@ -69,11 +69,11 @@ vector<unique_ptr<Piece>> Board::getBoard() {
     vector<unique_ptr<Piece>> board_copy;
     for (int i = 0; i < board.size(); i++) {
         bool side = board.at(i)->side;
-        bool hasMoved = board.at(i)->hasMoved;
+        bool has_moved = board.at(i)->has_moved;
         string unicode = board.at(i)->unicode;
 
         board_copy.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-        setPiece(board_copy, i, side, hasMoved, unicode);
+        setPiece(board_copy, i, side, has_moved, unicode);
 
     }
     return board_copy;
@@ -83,17 +83,17 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     if (board.size() == new_board.size()) {
         for (int i = 0; i < new_board.size(); i++) {
             bool side = new_board.at(i)->side;
-            bool hasMoved = new_board.at(i)->hasMoved;
+            bool has_moved = new_board.at(i)->has_moved;
             string unicode = new_board.at(i)->unicode;
 
-            setPiece(board, i, side, hasMoved, unicode);
+            setPiece(board, i, side, has_moved, unicode);
         }
         return true;
     }
     return false;
 }
 
-void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const string &unicode) {
+void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool has_moved, const string &unicode) {
     if (unicode == ".") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
     } else if (unicode == "♙") {
@@ -109,7 +109,7 @@ void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side,
     } else if (unicode == "♔") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<King>(side));
     }
-    new_board.at(index)->hasMoved = hasMoved;
+    new_board.at(index)->has_moved = has_moved;
 }
 
 //moves a piece and sets original index to empty
@@ -170,7 +170,7 @@ bool Board::checkLegalMove(int init_pos, int new_pos) {
     move(init_pos, new_pos);
     int king_index = getKingIndex(side);
 
-    //if the resulting position does not have the king in check, it is legal
+    //if the resulting position does not have the king in check and it does not capture a piece of the same color, it is legal
     if (find(opp_attacked_squares.begin(), opp_attacked_squares.end(), king_index) == opp_attacked_squares.end()) {
         legal = true;
     }
@@ -194,7 +194,7 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                     vector<int> piece_moves = board.at(square)->getAttackedSquares(square, board);
 
                     //pawns move diagonally to capture only when there is a piece there
-                    if (board.at(square)->pieceType == 'P') {
+                    if (board.at(square)->piece_type == 'P') {
                         for (int i = 0; i < piece_moves.size(); i++) {
                             if (board.at(piece_moves.at(i))->unicode != ".") {
                                 if (checkLegalMove(square, piece_moves.at(i))) {
@@ -205,7 +205,7 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                         //check pawn pushes
                         vector<int> pawn_pushes = getPawnPushes(square, side, board);
                         for (int i = 0; i < pawn_pushes.size(); i++) {
-                            if (board.at(pawn_pushes.at(i))->pieceType == 'E') {
+                            if (board.at(pawn_pushes.at(i))->piece_type == 'E') {
                                 if (checkLegalMove(square, pawn_pushes.at(i))) {
                                     legal_moves[square].push_back(pawn_pushes.at(i));
                                 }
@@ -227,162 +227,126 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
 }
 
 //takes a file character (a-h) and returns integer value (0 indexed)
-int Board::fileToInt(char c) {
-    //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0
-    return c - 97;
+int Board::charToInt(char c, bool file) {
+    //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0. Subtracting 48 makes '0' = 0
+    return file ? c-97 : c-48;
 }
 
+//see https://github.com/jacksonthall22/SAN-strings/blob/main/san_strings.txt as a reference for all possible legal short algebraic moves
 vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
     //variables
-    std::string input;
-    bool legal = false, castle = false;
+    std::string input, original_input;
+    bool legal = false;
     int file, rank, target_sq;
-    char pieceType;
 
     outs << "Please enter a legal move: ";
     while (!legal) {
         legal = true;
-        //ask for move
+        //rank/file specifier is for examples like dxc6 to specify the d pawn or promotion d7=Q
+        char piece_type = 'P', promote_type = 'Q', rank_file_specifier = '0';
+        //castle type is true if kingside, false if queenside
+        bool castle = false, castle_type, promotion = false, capture = false, check = false, checkmate = false;
+        std::stringstream ss;
 
+        //ask for move
         getline(ins, input);
 
-        //check to see if it is a single input
-        if (input.empty()) {
-            legal = false;
+        //validate input length first
+        while (input.size() < 2 || input.size() > 7) {
+            outs << '"' << input << '"' << " is an invalid length. Please enter a legal move: ";
+            getline(ins, input);
         }
-        for (int i = 0; i < input.length(); i++) {
-            if (isspace(input.at(i))) {
+        original_input = input;
+
+        //linear search to set cases
+        for (int i = 0; i < input.size(); i++) {
+            char c = input.at(i);
+            //no spaces allowed
+            if (isspace(c)) {
                 legal = false;
                 break;
             }
+            else if (c == 'x') capture = true;
+            else if (c == '+') check = true;
+            else if (c == '0' || c == '-' || c == 'O') castle = true;
+            else if (c == '=') promotion = true;
+            else if (c == '#') checkmate = true;
+
         }
-        if (legal) {
-            //pawn move
-            if (input.length() == 2) {
-                //TODO refactor to input[0] converted to int >=0 and <=7
-                if ((input[0] != 'a' && input[0] != 'b' && input[0] != 'c' && input[0] != 'd' && input[0] != 'e' &&
-                     input[0] != 'f' && input[0] != 'g' && input[0] != 'h') ||
-                    (input[1] != '1' && input[1] != '2' && input[1] != '3' && input[1] != '4' && input[1] != '5' &&
-                     input[1] != '6' && input[1] != '7' && input[1] != '8')) {
-                    legal = false;
 
-                }
-            }
-                //other move or castle
-            else if (input.length() == 3) {
-                if (((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
-                     (input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' && input[1] != 'e' &&
-                      input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
-                     (input[2] != '1' && input[2] != '2' && input[2] != '3' && input[2] != '4' && input[2] != '5' &&
-                      input[2] != '6' && input[2] != '7' && input[2] != '8')) && input != "O-O") {
-                    legal = false;
-                }
-            }
-                //capture or move
-            else if (input.length() == 4) {
-                if ((input[0] != 'N' && input[0] != 'B' && input[0] != 'R' && input[0] != 'Q' && input[0] != 'K') ||
-                    (input[1] != 'x' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' && input[1] != 'd' &&
-                     input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
-                    (input[2] != 'a' && input[2] != 'b' && input[2] != 'c' && input[2] != 'd' && input[2] != 'e' &&
-                     input[2] != 'f' && input[2] != 'g' && input[2] != 'h') ||
-                    (input[3] != '1' && input[3] != '2' && input[3] != '3' && input[3] != '4' && input[3] != '5' &&
-                     input[3] != '6' && input[3] != '7' && input[3] != '8')) {
-                    legal = false;
-                }
-            }
-                //castle or capture with R or N
-            else if (input.length() == 5) {
-                if (input != "O-O-O" &&
-                    ((input[0] != 'N' && input[0] != 'R' && input[1] != 'a' && input[1] != 'b' && input[1] != 'c' &&
-                      input[1] != 'd' && input[1] != 'e' && input[1] != 'f' && input[1] != 'g' && input[1] != 'h') ||
-                     (input[3] != 'x' && input[3] != 'a' && input[3] != 'b' && input[3] != 'c' && input[3] != 'd' &&
-                      input[3] != 'e' && input[3] != 'f' && input[3] != 'g' && input[3] != 'h') ||
-                     (input[4] != '1' && input[4] != '2' && input[4] != '3' && input[4] != '4' && input[4] != '5' &&
-                      input[4] != '6' && input[4] != '7' && input[4] != '8'))) {
-                    legal = false;
-                }
+        while (input.back() == '+' || input.back() == '#') {
+            input.pop_back();
+        }
 
-            }
-                //if any single word that is not according lengths
+        if (promotion) {
+            if (find(piece_types, piece_types+7, input.back()) == piece_types+7) legal = false;
             else {
-                legal = false;
-            }
-        }
-        //if still legal dissect the move, and see if it is a possible move for the piece
-        if (legal) {
-            castle = false;
-            std::stringstream ss;
-
-            //pawn move
-            if (input.length() == 2) {
-                pieceType = 'P';
-                file = fileToInt(input[0]);
-                ss << input[1];
-                ss >> rank;
-            }
-                //regular move or castle
-            else if (input.length() == 3) {
-                if (input == "O-O")
-                    castle = true;
+                promote_type = input.back();
+                input.pop_back();
+                if (input.back() != '=') legal = false;
                 else {
-                    pieceType = input[0];
-                    file = fileToInt(input[1]);
-                    ss << input[2];
+                    input.pop_back();
+                    ss << input.back();
                     ss >> rank;
-
-                    //check if it is not a capture
-                    target_sq = (8 - rank) * 16 + file;
-                    if (!(target_sq & 0x88)) {
-                        if (board.at(target_sq)->pieceType != 'E') {
-                            legal = false;
+                    input.pop_back();
+                    file = charToInt(input.back(), true);
+                    if (capture) {
+                        input.pop_back();
+                        if (input.back() != 'x') legal = false;
+                        else {
+                            input.pop_back();
+                            rank_file_specifier = input.back();
                         }
                     }
-                    else {
-                        legal = false;
-                    }
-
-                }
-
-            }
-                //capture or tied move
-                //TODO check board state to see if capture is allowed
-            else if (input.length() == 4) {
-                if (input[1] == 'x') {
-                    file = fileToInt(input[2]);
-                    pieceType = input[0];
-                    ss << input[3];
-                    ss >> rank;
-
-                    //check if it is actually a capture
-                    target_sq = (8 - rank) * 16 + file;
-                    if (!(target_sq & 0x88)) {
-                        if (board.at(target_sq)->pieceType == 'E') {
-                            legal = false;
-                        }
-                    }
-                    else {
-                        legal = false;
-                    }
-
-                } else {
-                    pieceType = input[0];
-                    file = fileToInt(input[2]);
-                    ss << input[3];
-                    ss >> rank;
-                }
-            }
-                //castle or tied capture
-            else if (input.length() == 5) {
-                if (input == "O-O-O") {
-                    castle = true;
-                } else {
-                    pieceType = input[0];
-                    file = fileToInt(input[3]);
-                    ss << input[4];
-                    ss >> rank;
                 }
             }
         }
+        else if (castle) {
+            if (input == "0-0" || input == "O-O") castle_type = true;
+            else if (input == "0-0-0" || input == "O-O-O") castle_type = false;
+            else legal = false;
+        }
+        else {
+            // rank and file will be last two chars
+            ss << input.back();
+            ss >> rank;
+            input.pop_back();
+            file = charToInt(input.back(), true);
+            input.pop_back();
+            if (capture) {
+                //if a capture, the next char will be x
+                if (input.back() != 'x') legal = false;
+                else {
+                    input.pop_back();
+                    //if next char is a piece type, assign, otherwise it is a rank/file specifier
+                    if (find(piece_types, piece_types+7, input.back()) != piece_types+7) piece_type = input.back();
+                    else if (find(ranks, ranks+8, input.back()) != ranks+8 ||
+                        find(files, files+8, input.back()) != files+8) {
+                            rank_file_specifier = input.back();
+                            input.pop_back();
+                            //next will be a piece type unless pawn capture
+                            if (piece_type != 'P') {
+                                if (find(piece_types, piece_types+7, input.back()) != piece_types+7) piece_type = input.back();
+                                    //if not a piece specifier, illegal input
+                                else legal = false;
+                            }
+                        }
+                    else legal = false;
+                    }
+                }
+            else {
+                //if it is a pawn push, input will be empty after pulling out rank and file
+                if (input != "") {
+                    //if it is not a capture, then it will be either a piece or rank/file disambiguation
+                    if (find(piece_types, piece_types + 7, input.back()) != piece_types + 7) piece_type = input.back();
+                    else if (find(ranks, ranks + 8, input.back()) != ranks + 8 &&
+                             find(files, files + 8, input.back()) != files + 8)
+                        rank_file_specifier = input.back();
+                    else legal = false; // if neither specifiers, illegal
+                }
+            }
+        }
+
         if (legal) {
             //NOTE: the following target_sq assignment may look a bit weird. This is because the board representation has
             //a8 as index 0, with indices increasing left to right, top to bottom. However, in standard notation,
@@ -396,10 +360,16 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 //cycle through starting squares in legal moves
                 for (const auto &elem: legal_moves) {
                     //search legal moves for pieces of the input type
-                    if (board.at(elem.first)->pieceType == pieceType) {
+                    if (board.at(elem.first)->piece_type == piece_type) {
                         //if the given target sq is in the piece's legal moves
                         if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
-                            return vector<int>{elem.first, target_sq};
+                            if (board.at(elem.first)->piece_type == 'P' && capture) {
+                                if (square_to_coords[elem.first][0] == rank_file_specifier) return vector<int>{elem.first, target_sq};
+                            }
+                            else {
+                                return vector<int>{elem.first, target_sq};
+                            }
+
                         }
                     }
                 }
@@ -407,9 +377,10 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         }
         legal = false;
         ins.clear();
-        outs << '"' << input << '"' << " is invalid. Please enter a legal move: ";
+        outs << '"' << original_input << '"' << " is invalid. Please enter a legal move: ";
     }
 }
+
 
 bool Board::makeUserMove(vector<int> moves) {
     side_to_move = !side_to_move;
@@ -506,19 +477,19 @@ void Board::printLegalMovesList(bool side) {
     for(const auto& elem : legal_moves)
     {
         for (int i = 0; i < elem.second.size(); i++) {
-            if (board.at(elem.first)->pieceType == 'P') {
-                if (board.at(elem.second.at(i))->pieceType != 'E') {
+            if (board.at(elem.first)->piece_type == 'P') {
+                if (board.at(elem.second.at(i))->piece_type != 'E') {
                     cout << square_to_coords[elem.first][0] << "x" << square_to_coords[elem.second.at(i)] << ", ";
                 }
                 else {
                     cout << square_to_coords[elem.second.at(i)] << ", ";
                 }
             }
-            else if (board.at(elem.second.at(i))->pieceType != 'E') {
-                cout << board.at(elem.first)->pieceType << "x" << square_to_coords[elem.second.at(i)] << ", ";
+            else if (board.at(elem.second.at(i))->piece_type != 'E') {
+                cout << board.at(elem.first)->piece_type << "x" << square_to_coords[elem.second.at(i)] << ", ";
             }
             else {
-                cout << board.at(elem.first)->pieceType << square_to_coords[elem.second.at(i)] << ", ";
+                cout << board.at(elem.first)->piece_type << square_to_coords[elem.second.at(i)] << ", ";
             }
 
         }

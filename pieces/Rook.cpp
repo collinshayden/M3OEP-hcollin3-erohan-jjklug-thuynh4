@@ -30,6 +30,6 @@ vector<int> Rook::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> 
 }
 
 Rook::Rook(bool side) : Piece(side) {
-    pieceType = 'R';
+    piece_type = 'R';
     unicode = "♖";
 }

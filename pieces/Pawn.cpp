@@ -15,7 +15,7 @@ enum squares {
 };
 
 Pawn::Pawn(bool side) : Piece(side) {
-    pieceType = 'P';
+    piece_type = 'P';
     unicode = "♙";
 }
 
@@ -50,7 +50,7 @@ vector<int> getPawnPushes(int initial_pos, bool side, vector<unique_ptr<Piece>> 
                 pawn_pushes.push_back(target_sq);
             }
             //if pawn hasn't moved, it can move two squares
-            if (!board.at(initial_pos)->hasMoved) {
+            if (!board.at(initial_pos)->has_moved) {
                 target_sq -= 16; //two squares
                 //if the pawn is on the second rank, target square is on board, and the squares in front are empty
                 //pawn can move two squares
@@ -65,7 +65,7 @@ vector<int> getPawnPushes(int initial_pos, bool side, vector<unique_ptr<Piece>> 
         if (!(target_sq & 0x88) && board.at(target_sq)->unicode == ".") {
             pawn_pushes.push_back(target_sq);
             //if pawn hasn't moved, it can move two squares
-            if (!board.at(initial_pos)->hasMoved) {
+            if (!board.at(initial_pos)->has_moved) {
                 target_sq += 16; //two squares
                 //if the pawn is on the second rank, target square is on board, and the squares in front are empty
                 //pawn can move two squares
