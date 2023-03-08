@@ -12,13 +12,19 @@ vector<int> Knight::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>
         int target_sq = initial_pos + knight_offsets[i];
         //is the square on the board
         if (!(target_sq & 0x88)) {
-            attacked_squares.push_back(target_sq);
+            if (board.at(target_sq)->unicode != ".") {
+                if (board.at(initial_pos)->side != board.at(target_sq)->side) {
+                    attacked_squares.push_back(target_sq);
+                }
+            } else {
+                attacked_squares.push_back(target_sq);
+            }
         }
     }
     return attacked_squares;
 }
 
 Knight::Knight(bool side) : Piece(side) {
-    pieceType = 'N';
+    piece_type = 'N';
     unicode = "♘";
 }
