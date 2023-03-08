@@ -13,14 +13,71 @@ using namespace std;
 
 // enum that lets us easily convert between algebraic coordinates and indices
 enum squares {
-    a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
-    a7 = 16,  b7, c7, d7, e7, f7, g7, h7,
-    a6 = 32,  b6, c6, d6, e6, f6, g6, h6,
-    a5 = 48,  b5, c5, d5, e5, f5, g5, h5,
-    a4 = 64,  b4, c4, d4, e4, f4, g4, h4,
-    a3 = 80,  b3, c3, d3, e3, f3, g3, h3,
-    a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
-    a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
+    a8 = 0,
+    b8,
+    c8,
+    d8,
+    e8,
+    f8,
+    g8,
+    h8,
+    a7 = 16,
+    b7,
+    c7,
+    d7,
+    e7,
+    f7,
+    g7,
+    h7,
+    a6 = 32,
+    b6,
+    c6,
+    d6,
+    e6,
+    f6,
+    g6,
+    h6,
+    a5 = 48,
+    b5,
+    c5,
+    d5,
+    e5,
+    f5,
+    g5,
+    h5,
+    a4 = 64,
+    b4,
+    c4,
+    d4,
+    e4,
+    f4,
+    g4,
+    h4,
+    a3 = 80,
+    b3,
+    c3,
+    d3,
+    e3,
+    f3,
+    g3,
+    h3,
+    a2 = 96,
+    b2,
+    c2,
+    d2,
+    e2,
+    f2,
+    g2,
+    h2,
+    a1 = 112,
+    b1,
+    c1,
+    d1,
+    e1,
+    f1,
+    g1,
+    h1,
+    no_sq
 };
 
 Board::Board(bool setup) {
@@ -93,7 +150,8 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
     return false;
 }
 
-void Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool has_moved, const string &unicode) {
+void
+Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool has_moved, const string &unicode) {
     if (unicode == ".") {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
     } else if (unicode == "♙") {
@@ -211,8 +269,7 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         for (int i = 0; i < piece_moves.size(); i++) {
                             if (checkLegalMove(square, piece_moves.at(i))) {
                                 legal_moves[square].push_back(piece_moves.at(i));
@@ -229,7 +286,7 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
 //takes a file character (a-h) and returns integer value (0 indexed)
 int Board::charToInt(char c, bool file) {
     //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0. Subtracting 48 makes '0' = 0
-    return file ? c-97 : c-48;
+    return file ? c - 97 : c - 48;
 }
 
 //see https://github.com/jacksonthall22/SAN-strings/blob/main/san_strings.txt as a reference for all possible legal short algebraic moves
@@ -242,7 +299,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
     outs << "Please enter a legal move: ";
     while (!legal) {
         legal = true;
-        //rank/file specifier is for examples like dxc6 to specify the d pawn or promotion d7=Q
+        //rank/file specifier is for examples like dxc6 to specify the d pawn or promotion d7=Q or Rde7
         char piece_type = 'P', promote_type = 'Q', rank_file_specifier = '0';
         //castle type is true if kingside, false if queenside
         bool castle = false, castle_type, promotion = false, capture = false, check = false, checkmate = false;
@@ -271,16 +328,16 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
             else if (c == '0' || c == '-' || c == 'O') castle = true;
             else if (c == '=') promotion = true;
             else if (c == '#') checkmate = true;
-
         }
-
+        //remove check and checkmate symbols after setting flags
         while (input.back() == '+' || input.back() == '#') {
             input.pop_back();
         }
 
         if (promotion) {
-            if (find(piece_types, piece_types+7, input.back()) == piece_types+7) legal = false;
+            if (find(piece_types, piece_types + 7, input.back()) == piece_types + 7) legal = false;
             else {
+                //for example d7=Q
                 promote_type = input.back();
                 input.pop_back();
                 if (input.back() != '=') legal = false;
@@ -290,23 +347,25 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     ss >> rank;
                     input.pop_back();
                     file = charToInt(input.back(), true);
+                    //for example dxe8=Q
                     if (capture) {
                         input.pop_back();
+                        //input popped to dx
                         if (input.back() != 'x') legal = false;
                         else {
                             input.pop_back();
+                            //rank specifier would be d in dxe8=Q
                             rank_file_specifier = input.back();
                         }
                     }
                 }
             }
-        }
-        else if (castle) {
+        } else if (castle) {
+            //castle_type is true for kingside, false for queenside
             if (input == "0-0" || input == "O-O") castle_type = true;
             else if (input == "0-0-0" || input == "O-O-O") castle_type = false;
-            else legal = false;
-        }
-        else {
+            else legal = false;//no other legal castling options
+        } else {
             // rank and file will be last two chars
             ss << input.back();
             ss >> rank;
@@ -319,22 +378,17 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 else {
                     input.pop_back();
                     //if next char is a piece type, assign, otherwise it is a rank/file specifier
-                    if (find(piece_types, piece_types+7, input.back()) != piece_types+7) piece_type = input.back();
-                    else if (find(ranks, ranks+8, input.back()) != ranks+8 ||
-                        find(files, files+8, input.back()) != files+8) {
-                            rank_file_specifier = input.back();
-                            input.pop_back();
-                            //next will be a piece type unless pawn capture
-                            if (piece_type != 'P') {
-                                if (find(piece_types, piece_types+7, input.back()) != piece_types+7) piece_type = input.back();
-                                    //if not a piece specifier, illegal input
-                                else legal = false;
-                            }
-                        }
-                    else legal = false;
-                    }
+                    if (find(piece_types, piece_types + 7, input.back()) != piece_types + 7) piece_type = input.back();
+                    else if (find(ranks, ranks + 8, input.back()) != ranks + 8 ||
+                             find(files, files + 8, input.back()) != files + 8) {
+                        rank_file_specifier = input.back();
+                        input.pop_back();
+                        //next will be a piece type unless pawn capture
+                        if (find(piece_types, piece_types + 7, input.back()) != piece_types + 7)
+                            piece_type = input.back();
+                    } else legal = false;
                 }
-            else {
+            } else {
                 //if it is a pawn push, input will be empty after pulling out rank and file
                 if (input != "") {
                     //if it is not a capture, then it will be either a piece or rank/file disambiguation
@@ -364,9 +418,9 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                         //if the given target sq is in the piece's legal moves
                         if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
                             if (board.at(elem.first)->piece_type == 'P' && capture) {
-                                if (square_to_coords[elem.first][0] == rank_file_specifier) return vector<int>{elem.first, target_sq};
-                            }
-                            else {
+                                if (square_to_coords[elem.first][0] == rank_file_specifier)
+                                    return vector<int>{elem.first, target_sq};
+                            } else {
                                 return vector<int>{elem.first, target_sq};
                             }
 
@@ -375,6 +429,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 }
             }
         }
+        // if no return value, set to false and try again
         legal = false;
         ins.clear();
         outs << '"' << original_input << '"' << " is invalid. Please enter a legal move: ";
@@ -387,8 +442,7 @@ bool Board::makeUserMove(vector<int> moves) {
     if (moves.size() == 2) {
         move(moves.at(0), moves.at(1));
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -474,21 +528,17 @@ void Board::printLegalMoves(bool side) {
 void Board::printLegalMovesList(bool side) {
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     cout << "The legal moves in this position are: ";
-    for(const auto& elem : legal_moves)
-    {
+    for (const auto &elem: legal_moves) {
         for (int i = 0; i < elem.second.size(); i++) {
             if (board.at(elem.first)->piece_type == 'P') {
                 if (board.at(elem.second.at(i))->piece_type != 'E') {
                     cout << square_to_coords[elem.first][0] << "x" << square_to_coords[elem.second.at(i)] << ", ";
-                }
-                else {
+                } else {
                     cout << square_to_coords[elem.second.at(i)] << ", ";
                 }
-            }
-            else if (board.at(elem.second.at(i))->piece_type != 'E') {
+            } else if (board.at(elem.second.at(i))->piece_type != 'E') {
                 cout << board.at(elem.first)->piece_type << "x" << square_to_coords[elem.second.at(i)] << ", ";
-            }
-            else {
+            } else {
                 cout << board.at(elem.first)->piece_type << square_to_coords[elem.second.at(i)] << ", ";
             }
 
