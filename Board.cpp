@@ -13,73 +13,17 @@ using namespace std;
 
 // enum that lets us easily convert between algebraic coordinates and indices
 enum squares {
-    a8 = 0,
-    b8,
-    c8,
-    d8,
-    e8,
-    f8,
-    g8,
-    h8,
-    a7 = 16,
-    b7,
-    c7,
-    d7,
-    e7,
-    f7,
-    g7,
-    h7,
-    a6 = 32,
-    b6,
-    c6,
-    d6,
-    e6,
-    f6,
-    g6,
-    h6,
-    a5 = 48,
-    b5,
-    c5,
-    d5,
-    e5,
-    f5,
-    g5,
-    h5,
-    a4 = 64,
-    b4,
-    c4,
-    d4,
-    e4,
-    f4,
-    g4,
-    h4,
-    a3 = 80,
-    b3,
-    c3,
-    d3,
-    e3,
-    f3,
-    g3,
-    h3,
-    a2 = 96,
-    b2,
-    c2,
-    d2,
-    e2,
-    f2,
-    g2,
-    h2,
-    a1 = 112,
-    b1,
-    c1,
-    d1,
-    e1,
-    f1,
-    g1,
-    h1,
-    no_sq
+    a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
+    a7 = 16,  b7, c7, d7, e7, f7, g7, h7,
+    a6 = 32,  b6, c6, d6, e6, f6, g6, h6,
+    a5 = 48,  b5, c5, d5, e5, f5, g5, h5,
+    a4 = 64,  b4, c4, d4, e4, f4, g4, h4,
+    a3 = 80,  b3, c3, d3, e3, f3, g3, h3,
+    a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
+    a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
+//setup constructor
 Board::Board(bool setup) {
     //array to convert from index to cord
     side_to_move = true;
@@ -116,9 +60,11 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Pawn>(true));
-        board.at(c6) = unique_ptr<Piece>(make_unique<Rook>(false));
-        board.at(b5) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(b5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+
     }
 }
 
@@ -127,10 +73,10 @@ vector<unique_ptr<Piece>> Board::getBoard() {
     for (int i = 0; i < board.size(); i++) {
         bool side = board.at(i)->side;
         bool has_moved = board.at(i)->has_moved;
-        string unicode = board.at(i)->unicode;
+        char piece = board.at(i)->piece_type;
 
         board_copy.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
-        setPiece(board_copy, i, side, has_moved, unicode);
+        setPiece(board_copy, i, side, has_moved, piece);
 
     }
     return board_copy;
@@ -141,9 +87,9 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
         for (int i = 0; i < new_board.size(); i++) {
             bool side = new_board.at(i)->side;
             bool has_moved = new_board.at(i)->has_moved;
-            string unicode = new_board.at(i)->unicode;
+            char piece = new_board.at(i)->piece_type;
 
-            setPiece(board, i, side, has_moved, unicode);
+            setPiece(board, i, side, has_moved, piece);
         }
         return true;
     }
@@ -151,20 +97,20 @@ bool Board::setBoard(vector<unique_ptr<Piece>> &new_board) {
 }
 
 void
-Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool has_moved, const string &unicode) {
-    if (unicode == ".") {
+Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool has_moved, const char piece_type) {
+    if (piece_type == 'E') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Empty>(side));
-    } else if (unicode == "♙") {
+    } else if (piece_type == 'P') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Pawn>(side));
-    } else if (unicode == "♖") {
+    } else if (piece_type == 'R') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Rook>(side));
-    } else if (unicode == "♘") {
+    } else if (piece_type == 'N') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Knight>(side));
-    } else if (unicode == "♗") {
+    } else if (piece_type == 'B') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Bishop>(side));
-    } else if (unicode == "♕") {
+    } else if (piece_type == 'Q') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<Queen>(side));
-    } else if (unicode == "♔") {
+    } else if (piece_type == 'K') {
         new_board.at(index) = std::unique_ptr<Piece>(make_unique<King>(side));
     }
     new_board.at(index)->has_moved = has_moved;
@@ -173,13 +119,13 @@ Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool
 //moves a piece and sets original index to empty
 void Board::move(int init_pos, int target_pos) {
     bool side = board.at(init_pos)->side;
-    string unicode = board.at(init_pos)->unicode;
+    char piece = board.at(init_pos)->piece_type;
 
     if (!(target_pos & 0x88)) {
         //set new pos to piece
-        setPiece(board, target_pos, side, true, unicode);
+        setPiece(board, target_pos, side, true, piece);
         //set initial position to empty
-        setPiece(board, init_pos, true, true, ".");
+        setPiece(board, init_pos, true, true, 'E');
     }
 }
 
@@ -393,9 +339,12 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 if (input != "") {
                     //if it is not a capture, then it will be either a piece or rank/file disambiguation
                     if (find(piece_types, piece_types + 7, input.back()) != piece_types + 7) piece_type = input.back();
-                    else if (find(ranks, ranks + 8, input.back()) != ranks + 8 &&
-                             find(files, files + 8, input.back()) != files + 8)
+                    else if (find(ranks, ranks + 8, input.back()) != ranks + 8 ||
+                             find(files, files + 8, input.back()) != files + 8) {
                         rank_file_specifier = input.back();
+                        input.pop_back();
+                        piece_type = input.back();
+                    }
                     else legal = false; // if neither specifiers, illegal
                 }
             }
@@ -417,10 +366,18 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     if (board.at(elem.first)->piece_type == piece_type) {
                         //if the given target sq is in the piece's legal moves
                         if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
-                            if (board.at(elem.first)->piece_type == 'P' && capture) {
-                                if (square_to_coords[elem.first][0] == rank_file_specifier)
-                                    return vector<int>{elem.first, target_sq};
-                            } else {
+                            if (rank_file_specifier != '0') {
+                                //
+                                if (find(files, files+8, rank_file_specifier) != files+8) {
+                                    if (square_to_coords[elem.first][0] == rank_file_specifier)
+                                        return vector<int>{elem.first, target_sq};
+                                }
+                                else if (find(ranks, ranks+8, rank_file_specifier) != ranks+8) {
+                                    if (square_to_coords[elem.first][1] == rank_file_specifier)
+                                        return vector<int>{elem.first, target_sq};
+                                }
+                            }
+                            else {
                                 return vector<int>{elem.first, target_sq};
                             }
 
@@ -444,6 +401,21 @@ bool Board::makeUserMove(vector<int> moves) {
         return true;
     } else {
         return false;
+    }
+}
+
+void Board::checkGameEnd() {
+    map<int, vector<int>> legal_moves = getLegalMoves(side_to_move);
+    vector<int> attacked_squares = getAttackedSquares(!side_to_move);
+    int king_location = getKingIndex(side_to_move);
+    if (legal_moves.empty()) {
+        if (find(attacked_squares.begin(), attacked_squares.end(), king_location) != attacked_squares.end()) {
+            side_to_move ? cout << "Checkmate, Black wins." << endl : cout << "Checkmate, White wins." << endl;
+        }
+        else {
+            cout << "Stalemate. The game is a draw." << endl;
+        }
+        game_end = true;
     }
 }
 
@@ -526,9 +498,11 @@ void Board::printLegalMoves(bool side) {
 }
 
 void Board::printLegalMovesList(bool side) {
+    //TODO print move disambiguating
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     cout << "The legal moves in this position are: ";
     for (const auto &elem: legal_moves) {
+        cout << endl;
         for (int i = 0; i < elem.second.size(); i++) {
             if (board.at(elem.first)->piece_type == 'P') {
                 if (board.at(elem.second.at(i))->piece_type != 'E') {
@@ -541,26 +515,9 @@ void Board::printLegalMovesList(bool side) {
             } else {
                 cout << board.at(elem.first)->piece_type << square_to_coords[elem.second.at(i)] << ", ";
             }
-
         }
-        cout << endl;
     }
+    cout << endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

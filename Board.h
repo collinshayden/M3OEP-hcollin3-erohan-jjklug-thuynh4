@@ -30,18 +30,20 @@ public:
     //Setters
     bool setBoard(vector<unique_ptr<Piece>> &new_board);
 
-    void setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const string &unicode);
+    void setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool hasMoved, const char piece_type);
 
     void move(int init_pos, int target_pos);
 
     bool makeUserMove(vector<int> moves);
 
-    //logic for legality
+    //game logic
     vector<int> getAttackedSquares(bool side);
 
     bool checkLegalMove(int init_pos, int new_pos);
 
     map<int, vector<int>> getLegalMoves(bool side);
+
+    void checkGameEnd();
 
     //prints
     void printBoard();

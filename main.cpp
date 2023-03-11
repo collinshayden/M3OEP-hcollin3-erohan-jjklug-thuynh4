@@ -18,21 +18,23 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
-
 int main () {
     cout << "Board" << endl;
-    Board board(true);//true is standard setup, false is custom
+    Board board(false);//true is standard setup, false is custom
     board.printBoard();
 //    cout << endl << "Attacked Squares" << endl;
 //    board.printAttackedSquares(true);
 //    cout << endl << "Legal Moves" << endl;
-    board.printLegalMoves(true);
-//
-    while(true) {
+
+    while(!board.game_end) {
         board.printLegalMovesList(board.side_to_move);
+//        board.printLegalMoves(board.side_to_move);
         vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
         board.makeUserMove(moves);
         board.printBoard();
+        board.checkGameEnd();
     }
 
 }
+
+
