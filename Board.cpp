@@ -131,7 +131,7 @@ int Board::getKingIndex(bool side) {
         for (int file = 0; file < 16; file++) {
             int square = rank * 16 + file;
             if (!(square & 0x88)) {
-                if (board.at(square)->side == side && board.at(square)->unicode == "♔") {
+                if (board.at(square)->side == side && board.at(square)->piece_type == 'K') {
                     return square;
                 }
             }
@@ -196,7 +196,7 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                     //pawns move diagonally to capture only when there is a piece there
                     if (board.at(square)->piece_type == 'P') {
                         for (int i = 0; i < piece_moves.size(); i++) {
-                            if (board.at(piece_moves.at(i))->unicode != ".") {
+                            if (board.at(piece_moves.at(i))->piece_type != 'E') {
                                 if (checkLegalMove(square, piece_moves.at(i))) {
                                     legal_moves[square].push_back(piece_moves.at(i));
                                 }

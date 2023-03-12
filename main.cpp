@@ -8,7 +8,6 @@ using namespace std;
 
 //TODO comments & readme
 //TODO menu on program start (color to play, stockfish enabled, show legal moves, etc)
-//TODO refactor unicode usages to char piece types
 //TODO stockfish api via python
 //TODO FEN get/set postions
 //TODO print move disambiguating in printLegalMovesList
