@@ -39,8 +39,8 @@ int main () {
 //    cout << endl << "Legal Moves" << endl;
 
     while(!board.game_end) {
-        board.printLegalMovesList(board.side_to_move);
-//        board.printLegalMoves(board.side_to_move);
+//        board.printLegalMovesList(board.side_to_move);
+//        board.printLegale4Moves(board.side_to_move);
         vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
         board.makeUserMove(moves);
         board.printBoard();

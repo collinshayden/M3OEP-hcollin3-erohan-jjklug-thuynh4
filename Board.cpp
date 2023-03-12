@@ -170,7 +170,7 @@ bool Board::checkLegalMove(int init_pos, int new_pos) {
     move(init_pos, new_pos);
     int king_index = getKingIndex(side);
 
-    //if the resulting position does not have the king in check and it does not capture a piece of the same color, it is legal
+    //if the resulting position does not have the king in check, and it does not capture a piece of the same color, it is legal
     if (find(opp_attacked_squares.begin(), opp_attacked_squares.end(), king_index) == opp_attacked_squares.end()) {
         legal = true;
     }
@@ -195,26 +195,28 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
 
                     //pawns move diagonally to capture only when there is a piece there
                     if (board.at(square)->piece_type == 'P') {
-                        for (int i = 0; i < piece_moves.size(); i++) {
-                            if (board.at(piece_moves.at(i))->piece_type != 'E') {
-                                if (checkLegalMove(square, piece_moves.at(i))) {
-                                    legal_moves[square].push_back(piece_moves.at(i));
+                        for (int target_sq : piece_moves) {
+                            if (board.at(target_sq)->piece_type != 'E') {
+                                if (checkLegalMove(square, target_sq)) {
+                                    legal_moves[square].push_back(target_sq);
                                 }
                             }
                         }
                         //check pawn pushes
                         vector<int> pawn_pushes = getPawnPushes(square, side, board);
-                        for (int i = 0; i < pawn_pushes.size(); i++) {
-                            if (board.at(pawn_pushes.at(i))->piece_type == 'E') {
-                                if (checkLegalMove(square, pawn_pushes.at(i))) {
-                                    legal_moves[square].push_back(pawn_pushes.at(i));
+                        for (int target_sq : pawn_pushes) {
+                            if (board.at(target_sq)->piece_type == 'E') {
+                                if (checkLegalMove(square, target_sq)) {
+                                    legal_moves[square].push_back(target_sq);
                                 }
                             }
                         }
-                    } else {
-                        for (int i = 0; i < piece_moves.size(); i++) {
-                            if (checkLegalMove(square, piece_moves.at(i))) {
-                                legal_moves[square].push_back(piece_moves.at(i));
+                    }
+                    //for other pieces, simulate the move
+                    else {
+                        for (int target_sq : piece_moves) {
+                            if (checkLegalMove(square, target_sq)) {
+                                legal_moves[square].push_back(target_sq);
                             }
                         }
                     }
@@ -258,8 +260,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         original_input = input;
 
         //linear search to set cases
-        for (int i = 0; i < input.size(); i++) {
-            char c = input.at(i);
+        for (char c : input) {
             //no spaces allowed
             if (isspace(c)) {
                 legal = false;
@@ -270,6 +271,8 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
             else if (c == '0' || c == '-' || c == 'O') castle = true;
             else if (c == '=') promotion = true;
             else if (c == '#') checkmate = true;
+            else if (find(piece_types, piece_types+7, c) != piece_types+7) piece_type = c;
+
         }
         //remove check and checkmate symbols after setting flags
         while (input.back() == '+' || input.back() == '#') {
@@ -332,7 +335,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 }
             } else {
                 //if it is a pawn push, input will be empty after pulling out rank and file
-                if (input != "") {
+                if (!input.empty()) {
                     //if it is not a capture, then it will be either a piece or rank/file disambiguation
                     if (find(piece_types, piece_types + 7, input.back()) != piece_types + 7) piece_type = input.back();
                     else if (find(ranks, ranks + 8, input.back()) != ranks + 8 ||
@@ -467,8 +470,8 @@ void Board::printLegalMoves(bool side) {
     vector<int> legal_destinations;
 
     for (const auto &elem: legal_moves) {
-        for (int i = 0; i < elem.second.size(); i++) {
-            legal_destinations.push_back(elem.second.at(i));
+        for (int i : elem.second) {
+            legal_destinations.push_back(i);
         }
     }
 
