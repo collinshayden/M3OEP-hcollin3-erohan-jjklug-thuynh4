@@ -6,6 +6,19 @@
 
 using namespace std;
 
+//TODO comments & readme
+//TODO menu on program start (color to play, stockfish enabled, show legal moves, etc)
+//TODO refactor unicode usages to char piece types
+//TODO stockfish api via python
+//TODO FEN get/set postions
+//TODO print move disambiguating in printLegalMovesList
+//TODO add promotion
+//TODO add castling
+//TODO save moves of the game in a list (needed for en passant and 50 move rule)
+//TODO add en passant
+//TODO add three fold repetition, insufficient material, 50 move rule draws
+//TODO add test cases for all complex functionality
+
 // square encoding
 enum squares {
     a8 = 0,   b8, c8, d8, e8, f8, g8, h8,
@@ -20,7 +33,7 @@ enum squares {
 
 int main () {
     cout << "Board" << endl;
-    Board board(false);//true is standard setup, false is custom
+    Board board(true);//true is standard setup, false is custom
     board.printBoard();
 //    cout << endl << "Attacked Squares" << endl;
 //    board.printAttackedSquares(true);

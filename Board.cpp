@@ -60,11 +60,7 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
-        board.at(b5) = unique_ptr<Piece>(make_unique<Knight>(true));
-        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
-        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
-
+        board.at(d7) = unique_ptr<Piece>(make_unique<Pawn>(true));
     }
 }
 
@@ -507,6 +503,7 @@ void Board::printLegalMovesList(bool side) {
             if (board.at(elem.first)->piece_type == 'P') {
                 if (board.at(elem.second.at(i))->piece_type != 'E') {
                     cout << square_to_coords[elem.first][0] << "x" << square_to_coords[elem.second.at(i)] << ", ";
+                    
                 } else {
                     cout << square_to_coords[elem.second.at(i)] << ", ";
                 }
