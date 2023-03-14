@@ -14,4 +14,6 @@ public:
     vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 };
 
+vector<bool> castleAvailability(bool side, vector<unique_ptr<Piece>> &board, vector<int> opp_attacked_squares);
+
 #endif //M1OEP_HCOLLIN3_KING_H

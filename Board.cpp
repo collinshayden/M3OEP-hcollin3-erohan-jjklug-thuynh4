@@ -60,7 +60,11 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(d7) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+//        board.at(g8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
 
@@ -118,6 +122,16 @@ void Board::move(int init_pos, int target_pos) {
     char piece = board.at(init_pos)->piece_type;
 
     if (!(target_pos & 0x88)) {
+        //checking for castles
+        if (piece == 'K' && (init_pos == e1 || init_pos == e8)) {
+            //map of rook destinations and origins based on new king position
+            map<int, vector<int>> castle_sqs = {{g1, {f1,h1}}, {c1, {d1, a1}}, {g8, {f8, h8}}, {c8, {d8, a8}}};
+            //our normal move will only function will only move the king, so below we additionally move the rook to the proper place
+            if (castle_sqs.count(target_pos) != 0) {
+                setPiece(board, castle_sqs.at(target_pos).at(0), side, true, 'R');
+                setPiece(board, castle_sqs.at(target_pos).at(1), side, true, 'E');
+            }
+        }
         //set new pos to piece
         setPiece(board, target_pos, side, true, piece);
         //set initial position to empty
@@ -144,7 +158,6 @@ int Board::getKingIndex(bool side) {
 vector<int> Board::getAttackedSquares(bool side) {
     vector<int> all_attacked_squares;
     vector<int> piece_attacked_squares;
-//
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 16; file++) {
             int square = rank * 16 + file;
@@ -220,6 +233,23 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
                             }
                         }
                     }
+                    //castles
+                    if (board.at(square)->piece_type == 'K') {
+                        vector<bool> castles = castleAvailability(side, board, getAttackedSquares(!side));
+                        int ks, qs;
+                        ks = side ? g1 : g8;
+                        qs = side ? c1 : c8;
+                        if (castles.at(0)) {
+                            if (checkLegalMove(square, ks)) {
+                                legal_moves[square].push_back(ks);
+                            }
+                        }
+                        if (castles.at(1)) {
+                            if (checkLegalMove(square, qs)) {
+                                legal_moves[square].push_back(qs);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -246,7 +276,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         //rank/file specifier is for examples like dxc6 to specify the d pawn or promotion d7=Q or Rde7
         char piece_type = 'P', promote_type = 'Q', rank_file_specifier = '0';
         //castle type is true if kingside, false if queenside
-        bool castle = false, castle_type, promotion = false, capture = false, check = false, checkmate = false;
+        bool castle = false, castle_kingside, promotion = false, capture = false, check = false, checkmate = false;
         std::stringstream ss;
 
         //ask for move
@@ -306,10 +336,23 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 }
             }
         } else if (castle) {
-            //castle_type is true for kingside, false for queenside
-            if (input == "0-0" || input == "O-O") castle_type = true;
-            else if (input == "0-0-0" || input == "O-O-O") castle_type = false;
-            else legal = false;//no other legal castling options
+            //castle_kingside is true for kingside, false for queenside
+            piece_type = 'K';
+            if (input == "0-0" || input == "O-O") {
+                castle_kingside = true;
+                file = charToInt('g', true);
+                rank = side ? 1 : 8;
+            }
+            else if (input == "0-0-0" || input == "O-O-O") {
+                castle_kingside = false;
+                file = charToInt('c', true);
+                rank = side ? 1 : 8;
+            }
+            else {//no other legal castling options
+                legal = false;
+                castle = false;
+            }
+            
         } else {
             // rank and file will be last two chars
             ss << input.back();
@@ -364,6 +407,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     //search legal moves for pieces of the input type
                     if (board.at(elem.first)->piece_type == piece_type) {
                         //if the given target sq is in the piece's legal moves
+                        //TODO verify castling
                         if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
                             if (rank_file_specifier != '0') {
                                 //
@@ -391,7 +435,6 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         outs << '"' << original_input << '"' << " is invalid. Please enter a legal move: ";
     }
 }
-
 
 bool Board::makeUserMove(vector<int> moves) {
     side_to_move = !side_to_move;

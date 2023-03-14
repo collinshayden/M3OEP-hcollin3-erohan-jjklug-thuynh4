@@ -9,7 +9,7 @@ using namespace std;
 //TODO comments & readme
 //TODO menu on program start (color to play, stockfish enabled, show legal moves, etc)
 //TODO stockfish api via python
-//TODO FEN get/set postions
+//TODO FEN get/set positions
 //TODO print move disambiguating in printLegalMovesList
 //TODO add promotion
 //TODO add castling
@@ -32,7 +32,7 @@ enum squares {
 
 int main () {
     cout << "Board" << endl;
-    Board board(true);//true is standard setup, false is custom
+    Board board(false);//true is standard setup, false is custom
     board.printBoard();
 //    cout << endl << "Attacked Squares" << endl;
 //    board.printAttackedSquares(true);
