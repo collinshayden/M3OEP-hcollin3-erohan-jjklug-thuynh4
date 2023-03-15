@@ -69,7 +69,7 @@ private:
     char files[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     char ranks[8] = {'1','2','3','4','5','6','7','8'};
     char piece_types[7] = {'E', 'P', 'R', 'N', 'B', 'Q', 'K'};
-
+    char promotion_type = 'E';
 };
 
 

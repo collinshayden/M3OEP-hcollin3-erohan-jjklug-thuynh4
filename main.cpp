@@ -12,7 +12,6 @@ using namespace std;
 //TODO FEN get/set positions
 //TODO print move disambiguating in printLegalMovesList
 //TODO add promotion
-//TODO add castling
 //TODO save moves of the game in a list (needed for en passant and 50 move rule)
 //TODO add en passant
 //TODO add three fold repetition, insufficient material, 50 move rule draws
@@ -39,14 +38,12 @@ int main () {
 //    cout << endl << "Legal Moves" << endl;
 
     while(!board.game_end) {
-//        board.printLegalMovesList(board.side_to_move);
-//        board.printLegale4Moves(board.side_to_move);
+        board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
         board.makeUserMove(moves);
         board.printBoard();
-        board.checkGameEnd();
+//        board.checkGameEnd();
     }
-
 }
 
 
