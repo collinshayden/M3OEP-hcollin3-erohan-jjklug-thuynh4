@@ -60,9 +60,9 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(e8) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(a8) = unique_ptr<Piece>(make_unique<King>(false));
-        board.at(c7) = unique_ptr<Piece>(make_unique<Pawn>(true));
+        board.at(f8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(a8) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(d7) = unique_ptr<Piece>(make_unique<Pawn>(true));
 
     }
 }
@@ -118,7 +118,7 @@ Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool
 //moves a piece and sets original index to empty
 void Board::move(int init_pos, int target_pos) {
     bool side = board.at(init_pos)->side;
-    char piece = promotion_type == 'E' ? board.at(init_pos)->piece_type : promotion_type;
+    char piece = promotion ? promotion_type : board.at(init_pos)->piece_type;
 
     if (!(target_pos & 0x88)) {
         //checking for castles
@@ -135,7 +135,7 @@ void Board::move(int init_pos, int target_pos) {
         setPiece(board, target_pos, side, true, piece);
 
         //set initial position to empty
-        setPiece(board, init_pos, true, true, 'E');
+        setPiece(board, init_pos, side, true, 'E');
     }
 }
 
@@ -442,13 +442,15 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
 }
 
 bool Board::makeUserMove(vector<int> moves) {
-    side_to_move = !side_to_move;
     if (moves.size() == 2) {
+        promotion = promotion_type != 'E';
         move(moves.at(0), moves.at(1));
-        return true;
+        promotion_type = 'E'; promotion = false;
     } else {
         return false;
     }
+    side_to_move = !side_to_move;
+    return true;
 }
 
 void Board::checkGameEnd() {
@@ -546,6 +548,7 @@ void Board::printLegalMoves(bool side) {
 
 void Board::printLegalMovesList(bool side) {
     //TODO print move disambiguating
+    cout << "printing legal moves" << endl;
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     cout << "The legal moves in this position are: ";
     for (const auto &elem: legal_moves) {
@@ -565,4 +568,5 @@ void Board::printLegalMovesList(bool side) {
             }
         }
     }
+    cout << endl;
 }
