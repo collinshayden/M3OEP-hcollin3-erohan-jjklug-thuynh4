@@ -4,7 +4,7 @@
 #include <iostream>
 #include "pieces/pieceClasses.h"
 #include <filesystem>
-
+#include <sstream>
 using namespace std;
 
 // square encoding
@@ -31,8 +31,47 @@ enum squares {
 //        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1", "m1", "n1", "o1", "p1"
 //};
 string getMove(string FEN, string elo,Board board);
-
+void passAndPlay();
+void stockFish(int elo);
 int main () {
+    string line;
+    stringstream ss;
+    int elo;
+    cout << "Welcome to Chess" << endl;
+    cout << "would you like to do pass and play or play a computer? (p/c) " << endl;
+    getline(cin, line);
+    while(line != "p" || line != "c"){
+        cout << "please enter a valid option (p/c): " << endl;
+        cin.clear();
+        getline(cin,line);
+    }
+    if(line == "p"){
+        passAndPlay();
+    }else{
+        cin.clear();
+        cout << "Jack , elo 400" << endl;
+        cout << "Evan, elo 1000" << endl;
+        cout << "Hayden, elo 1700" << endl;
+        cout << "Huong, elo 1900" << endl;
+        cout << "Who would you like to play against? (j,e,ha,hu) " << endl;
+        getline(cin, line);
+        while(line != "j" || line != "e" || line != "ha" || line != "hu"){
+            cout << "please enter a valid option (j,e,ha,hu): " << endl;
+            cin.clear();
+            getline(cin,line);
+        }
+        if(line == "j"){
+            elo = 400;
+        }else if(line == "e"){
+            elo = 1000;
+        }else if(line == "ha"){
+            elo = 1700;
+        }else{
+            elo = 2000;
+        }
+        //run stockfish option
+        stockFish(elo);
+    }
     cout << "Board" << endl;
     Board board(true);
     board.printBoard();
@@ -62,4 +101,12 @@ string getMove(string FEN, string elo, Board board){
     string command = python + "../stockfish.py" + FEN + elo;
     system(command.c_str());
     //get return from python?
+}
+
+void passAndPlay(){
+
+}
+
+void stockFish(int elo){
+
 }
