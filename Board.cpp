@@ -554,25 +554,47 @@ void Board::checkGameEnd() {
 }
 
 //prints unicode representation of board
-void Board::printBoard() {
-    // print new line
-    printf("\n");
-
-    for (int rank = 0; rank < 8; rank++) {
-        for (int file = 0; file < 16; file++) {
-            int square = rank * 16 + file;
-
-            if (file == 0) {
-                printf(" %d  ", 8 - rank);
-            }
-            // if square is on board
-            if (!(square & 0x88)) {
-                cout << board[square]->unicode << " ";
-            }
-        }
+void Board::printBoard(bool side) {
+    //print for white
+    if(side) {
+        // print new line
         printf("\n");
+
+        for (int rank = 0; rank < 8; rank++) {
+            for (int file = 0; file < 16; file++) {
+                int square = rank * 16 + file;
+
+                if (file == 0) {
+                    printf(" %d  ", 8 - rank);
+                }
+                // if square is on board
+                if (!(square & 0x88)) {
+                    cout << board[square]->unicode << " ";
+                }
+            }
+            printf("\n");
+        }
+        printf("\n    a b c d e f g h\n");
+    }else{
+        //print for black
+        printf("\n");
+
+        for (int rank = 7; rank > 0; rank--) {
+            for (int file = 15; file > 0; file--) {
+                int square = rank * 16 + file;
+
+                if (file == 0) {
+                    printf(" %d  ", 8 - rank);
+                }
+                // if square is on board
+                if (!(square & 0x88)) {
+                    cout << board[square]->unicode << " ";
+                }
+            }
+            printf("\n");
+        }
+        printf("\n    h g f e d c b a\n");
     }
-    printf("\n    a b c d e f g h\n");
 }
 
 //prints attacked squares of a side as x

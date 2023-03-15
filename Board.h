@@ -112,7 +112,7 @@ public:
     /**
      * prints the boeard
      */
-    void printBoard();
+    void printBoard(bool side);
     /**
      * Prints squares attacked for a side
      * @param side

@@ -31,7 +31,9 @@ enum squares {
 };
 string getMove(string FEN, string elo,Board board);
 void passAndPlay();
+
 void stockFish(int elo);
+
 int main () {
     string line;
     stringstream ss;
@@ -73,7 +75,7 @@ int main () {
     }
     cout << "Board" << endl;
     Board board(false);//true is standard setup, false is custom
-    board.printBoard();
+    board.printBoard(true);
 //    cout << endl << "Attacked Squares" << endl;
 //    board.printAttackedSquares(true);
 //    cout << endl << "Legal Moves" << endl;
@@ -82,7 +84,7 @@ int main () {
         board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard();
+        board.printBoard(true);
 //        board.checkGameEnd();
     }
 }
