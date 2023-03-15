@@ -8,6 +8,7 @@ Empty::Empty(bool color) : Piece(color) {
     piece_type = 'E';
     unicode = ".";
     side = color;
+    has_moved = true;
 }
 
 vector<int> Empty::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {

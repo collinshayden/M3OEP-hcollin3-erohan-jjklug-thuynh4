@@ -60,11 +60,10 @@ Board::Board(bool setup) {
         board.at(g1) = unique_ptr<Piece>(make_unique<Knight>(true));
         board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
     } else {
-        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
-        board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
-        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
-//        board.at(g8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(f8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(a8) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(d7) = unique_ptr<Piece>(make_unique<Pawn>(true));
+
     }
 }
 
@@ -119,7 +118,7 @@ Board::setPiece(vector<unique_ptr<Piece>> &new_board, int index, bool side, bool
 //moves a piece and sets original index to empty
 void Board::move(int init_pos, int target_pos) {
     bool side = board.at(init_pos)->side;
-    char piece = board.at(init_pos)->piece_type;
+    char piece = promotion ? promotion_type : board.at(init_pos)->piece_type;
 
     if (!(target_pos & 0x88)) {
         //checking for castles
@@ -134,8 +133,9 @@ void Board::move(int init_pos, int target_pos) {
         }
         //set new pos to piece
         setPiece(board, target_pos, side, true, piece);
+
         //set initial position to empty
-        setPiece(board, init_pos, true, true, 'E');
+        setPiece(board, init_pos, side, true, 'E');
     }
 }
 
@@ -170,18 +170,20 @@ vector<int> Board::getAttackedSquares(bool side) {
             }
         }
     }
+
     return all_attacked_squares;
 }
 
 bool Board::checkLegalMove(int init_pos, int new_pos) {
+    if (!(!(init_pos & 0x88) && !(new_pos & 0x88))) return false;
     bool side = board.at(init_pos)->side;
     bool legal = false;
-    vector<int> opp_attacked_squares = getAttackedSquares(!side);
     vector<unique_ptr<Piece>> original_board = getBoard();
 
     //make that move on the board
     move(init_pos, new_pos);
     int king_index = getKingIndex(side);
+    vector<int> opp_attacked_squares = getAttackedSquares(!side);
 
     //if the resulting position does not have the king in check, and it does not capture a piece of the same color, it is legal
     if (find(opp_attacked_squares.begin(), opp_attacked_squares.end(), king_index) == opp_attacked_squares.end()) {
@@ -357,7 +359,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
     while (!legal) {
         legal = true;
         //rank/file specifier is for examples like dxc6 to specify the d pawn or promotion d7=Q or Rde7
-        char piece_type = 'P', promote_type = 'Q', rank_file_specifier = '0';
+        char piece_type = 'P', rank_file_specifier = '0'; promotion_type = 'E';
         //castle type is true if kingside, false if queenside
         bool castle = false, castle_kingside, promotion = false, capture = false, check = false, checkmate = false;
         std::stringstream ss;
@@ -393,10 +395,14 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         }
 
         if (promotion) {
-            if (find(piece_types, piece_types + 7, input.back()) == piece_types + 7) legal = false;
+            //cannot promote to king or pawn
+            char promotion_types[4] = {'Q', 'R', 'N', 'B'};
+            //if the last char is not a piecetype specifying promotion. not legal
+            if (find(promotion_types, promotion_types + 4, input.back()) == promotion_types + 4) legal = false;
             else {
                 //for example d7=Q
-                promote_type = input.back();
+                promotion_type = input.back();
+                piece_type = 'P';
                 input.pop_back();
                 if (input.back() != '=') legal = false;
                 else {
@@ -490,7 +496,6 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     //search legal moves for pieces of the input type
                     if (board.at(elem.first)->piece_type == piece_type) {
                         //if the given target sq is in the piece's legal moves
-                        //TODO verify castling
                         if (find(elem.second.begin(), elem.second.end(), target_sq) != elem.second.end()) {
                             if (rank_file_specifier != '0') {
                                 //
@@ -520,13 +525,15 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
 }
 
 bool Board::makeUserMove(vector<int> moves) {
-    side_to_move = !side_to_move;
     if (moves.size() == 2) {
+        promotion = promotion_type != 'E';
         move(moves.at(0), moves.at(1));
-        return true;
+        promotion_type = 'E'; promotion = false;
     } else {
         return false;
     }
+    side_to_move = !side_to_move;
+    return true;
 }
 
 void Board::checkGameEnd() {
@@ -626,6 +633,7 @@ void Board::printLegalMoves(bool side) {
 
 void Board::printLegalMovesList(bool side) {
     //TODO print move disambiguating
+    cout << "printing legal moves" << endl;
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     cout << "The legal moves in this position are: ";
     for (const auto &elem: legal_moves) {
@@ -647,5 +655,3 @@ void Board::printLegalMovesList(bool side) {
     }
     cout << endl;
 }
-
-

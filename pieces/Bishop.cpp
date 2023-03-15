@@ -7,9 +7,7 @@
 Bishop::Bishop(bool side) : Piece(side) {
     piece_type = 'B';
     unicode = "♗";
-
 }
-
 
 vector<int> Bishop::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> attacked_squares;

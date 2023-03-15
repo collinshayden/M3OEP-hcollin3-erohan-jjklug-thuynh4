@@ -48,30 +48,30 @@ vector<bool> castleAvailability(bool side, vector<unique_ptr<Piece>> &board, vec
     //white
     if (side) {
         //if the king has not moved, and is not in check
-        if (!board.at(e1)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), e1) == opp_attacked_squares.end()) {
+        if (board.at(e1)->piece_type == 'K' && !board.at(e1)->has_moved && board.at(e1)->side == side && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), e1) == opp_attacked_squares.end()) {
             //kingside
             //if the rook hasn't moved and f1 is not attacked
-            if (!board.at(h1)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), f1) == opp_attacked_squares.end()) {
+            if (board.at(h1)->piece_type == 'R' && !board.at(h1)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), f1) == opp_attacked_squares.end()) {
                 castles.at(0) = true;
             }
             //queenside
             //if the rook hasn't moved and c1 is not attacked
-            if (!board.at(a1)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), c1) == opp_attacked_squares.end()) {
+            if (board.at(a1)->piece_type == 'R' && !board.at(a1)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), c1) == opp_attacked_squares.end()) {
                 castles.at(1) = true;
             }
         }
     }
     //black
     else {
-        if (!board.at(e8)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), e8) == opp_attacked_squares.end()) {
+        if (board.at(e8)->piece_type == 'K' && !board.at(e8)->has_moved && board.at(e8)->side == side && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), e8) == opp_attacked_squares.end()) {
             //kingside
             //if the rook hasn't moved and f8 is not attacked
-            if (!board.at(h8)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), f8) == opp_attacked_squares.end()) {
+            if (board.at(h8)->piece_type == 'R' && !board.at(h8)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), f8) == opp_attacked_squares.end()) {
                 castles.at(0) = true;
             }
             //queenside
             //if the rook hasn't moved and c8 is not attacked
-            if (!board.at(a8)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), c8) == opp_attacked_squares.end()) {
+            if (board.at(a8)->piece_type == 'R' && !board.at(a8)->has_moved && find(opp_attacked_squares.begin(), opp_attacked_squares.end(), c8) == opp_attacked_squares.end()) {
                 castles.at(1) = true;
             }
         }
