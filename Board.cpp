@@ -334,7 +334,7 @@ string Board::getFEN(bool turn) {
 //takes a file character (a-h) and returns integer value (0 indexed)
 int Board::charToInt(char c) {
     //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0. Subtracting 48 makes '0' = 0
-    returnc - 97;
+    return c - 97;
 }
 //chess notation menu
 void Board::chessNotation(std::ostream& outs){

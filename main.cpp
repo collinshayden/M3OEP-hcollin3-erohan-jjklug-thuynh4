@@ -5,7 +5,6 @@
 #include "pieces/pieceClasses.h"
 #include <filesystem>
 #include <sstream>
-#include <time.h>
 using namespace std;
 
 //TODO comments & readme
@@ -36,13 +35,47 @@ void passAndPlay(Board& board);
 
 void stockFish(int elo,Board& board,bool side);
 
+void regularPlay();
+
+int squareToInt(string square);
+
 int main () {
+    cout << "Welcome to Chess" << endl;
+    regularPlay();
+}
+
+vector<int> getMove(string FEN, string elo, Board board){
+    //change based on computer type
+    const string python = "python";
+    string command = python + "../stockfish.py" + " "+ FEN +" "+ elo;
+    system(command.c_str());
+    //get return from python?
+    string move = "?";
+}
+
+void passAndPlay(Board& board){
+
+}
+
+void stockFish(int elo,Board& board,bool side){
+    if(!side){
+        board.move()
+    }
+    while(!board.game_end) {
+        board.printLegalMovesList(board.side_to_move);
+        vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
+        board.makeUserMove(moves);
+        board.printBoard(true);
+//        board.checkGameEnd();
+    }
+}
+
+void regularPlay(){
     string line;
     stringstream ss;
     int elo;
     bool side;
     Board board(true);
-    cout << "Welcome to Chess" << endl;
     cout << "would you like to do pass and play or play a computer? (p/c) " << endl;
     getline(cin, line);
     while(line != "p" || line != "c"){
@@ -75,43 +108,13 @@ int main () {
             elo = 2000;
         }
         //run stockfish option
-        srand(time(NULL));
-        if(rand()%1 == 0){
-            side = true;
-        }else{
-            side = false;
-        }
+
         stockFish(elo,board,side);
     }
-
 }
 
-
-}
-
-vector<int> getMove(string FEN, string elo, Board board){
-    //change based on computer type
-    const string python = "python";
-    string command = python + "../stockfish.py" + FEN + elo;
-    system(command.c_str());
-    //get return from python?
-    string move = "?";
-    return move;
-}
-
-void passAndPlay(Board& board){
-
-}
-
-void stockFish(int elo,Board& board,bool side){
-    if(!side){
-        board.move()
-    }
-    while(!board.game_end) {
-        board.printLegalMovesList(board.side_to_move);
-        vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
-        board.makeUserMove(moves);
-        board.printBoard(true);
-//        board.checkGameEnd();
-    }
+int squareToInt(string square){
+    int file = square[0]-97;
+    int rank = square[1];
+    return
 }
