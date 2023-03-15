@@ -262,8 +262,9 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     }
     return legal_moves;
 }
-
+//gets FEN of board
 string Board::getFEN(bool turn) {
+    //variables
     int square;
     int empty_spaces;
     string space;
@@ -271,36 +272,46 @@ string Board::getFEN(bool turn) {
     bool side;
     string FEN = "";
     stringstream ss;
+    //for loop through the board
     for (int rank = 0; rank < 8; rank++) {
         empty_spaces = 0;
         for (int file = 0; file < 16; file++) {
             square = rank * 16 + file;
+            //if square is on the board
             if (!(square & 0x88)) {
                 //find what piece is there + black or white
                 piece_type = board.at(square)->piece_type;
                 side = board.at(square)->side;
+                //if empty add one to empty spaces
                 if(piece_type == 'E'){
                     empty_spaces++;
                 }else{
+                    //if black make piece_type lower case
                     if(!side){
                         tolower(piece_type);
                     }
+                    //if no empty spaces before piece, just add the piece
                     if(empty_spaces == 0){
                         FEN += piece_type;
                     }else{
+                        //else add the amount of empty spaces before the piece and then add the piece
                         ss << empty_spaces;
                         ss >> space;
                         FEN += space + piece_type;
+                        //reset spaces
                         empty_spaces = 0;
                         ss.clear();
                     }
                 }
             }
         }
+        //if not the last rank
         if(rank != 7) {
+            //if no spaces, just add a slash
             if (empty_spaces == 0) {
                 FEN += "/";
             }else{
+                //otherwise add the amount of spaces and then end the rank
                 ss << empty_spaces;
                 ss >> space;
                 FEN += space + "/";
