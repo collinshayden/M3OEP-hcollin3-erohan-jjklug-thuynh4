@@ -334,7 +334,7 @@ int Board::charToInt(char c, bool file) {
     //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0. Subtracting 48 makes '0' = 0
     return file ? c - 97 : c - 48;
 }
-
+//chess notation menu
 void Board::chessNotation(std::ostream& outs){
     outs << "How to enter a move\nThis program uses default chess notation";
     outs << "For a pawn move, select the square you would like it to go, eg: e4, d3, a1\n";
