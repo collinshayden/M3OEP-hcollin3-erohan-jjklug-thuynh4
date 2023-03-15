@@ -5,6 +5,7 @@
 #include "pieces/pieceClasses.h"
 #include <filesystem>
 #include <sstream>
+#include <time.h>
 using namespace std;
 
 //TODO comments & readme
@@ -29,15 +30,18 @@ enum squares {
     a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
-string getMove(string FEN, string elo,Board board);
-void passAndPlay();
+vector<int> getMove(string FEN, string elo,Board board);
 
-void stockFish(int elo);
+void passAndPlay(Board& board);
+
+void stockFish(int elo,Board& board,bool side);
 
 int main () {
     string line;
     stringstream ss;
     int elo;
+    bool side;
+    Board board(true);
     cout << "Welcome to Chess" << endl;
     cout << "would you like to do pass and play or play a computer? (p/c) " << endl;
     getline(cin, line);
@@ -47,7 +51,7 @@ int main () {
         getline(cin,line);
     }
     if(line == "p"){
-        passAndPlay();
+        passAndPlay(board);
     }else{
         cin.clear();
         cout << "Jack , elo 400" << endl;
@@ -71,15 +75,38 @@ int main () {
             elo = 2000;
         }
         //run stockfish option
-        stockFish(elo);
+        srand(time(NULL));
+        if(rand()%1 == 0){
+            side = true;
+        }else{
+            side = false;
+        }
+        stockFish(elo,board,side);
     }
-    cout << "Board" << endl;
-    Board board(false);//true is standard setup, false is custom
-    board.printBoard(true);
-//    cout << endl << "Attacked Squares" << endl;
-//    board.printAttackedSquares(true);
-//    cout << endl << "Legal Moves" << endl;
 
+}
+
+
+}
+
+vector<int> getMove(string FEN, string elo, Board board){
+    //change based on computer type
+    const string python = "python";
+    string command = python + "../stockfish.py" + FEN + elo;
+    system(command.c_str());
+    //get return from python?
+    string move = "?";
+    return move;
+}
+
+void passAndPlay(Board& board){
+
+}
+
+void stockFish(int elo,Board& board,bool side){
+    if(!side){
+        board.move()
+    }
     while(!board.game_end) {
         board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
@@ -87,23 +114,4 @@ int main () {
         board.printBoard(true);
 //        board.checkGameEnd();
     }
-}
-
-
-}
-
-string getMove(string FEN, string elo, Board board){
-    //change based on computer type
-    const string python = "python";
-    string command = python + "../stockfish.py" + FEN + elo;
-    system(command.c_str());
-    //get return from python?
-}
-
-void passAndPlay(){
-
-}
-
-void stockFish(int elo){
-
 }

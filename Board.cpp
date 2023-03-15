@@ -332,9 +332,9 @@ string Board::getFEN(bool turn) {
 }
 
 //takes a file character (a-h) and returns integer value (0 indexed)
-int Board::charToInt(char c, bool file) {
+int Board::charToInt(char c) {
     //all chars can be directly converted to integers. Subtracting 97 makes 'a' = 0. Subtracting 48 makes '0' = 0
-    return file ? c - 97 : c - 48;
+    returnc - 97;
 }
 //chess notation menu
 void Board::chessNotation(std::ostream& outs){
@@ -410,7 +410,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                     ss << input.back();
                     ss >> rank;
                     input.pop_back();
-                    file = charToInt(input.back(), true);
+                    file = charToInt(input.back());
                     //for example dxe8=Q
                     if (capture) {
                         input.pop_back();
@@ -429,12 +429,12 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
             piece_type = 'K';
             if (input == "0-0" || input == "O-O") {
                 castle_kingside = true;
-                file = charToInt('g', true);
+                file = charToInt('g');
                 rank = side ? 1 : 8;
             }
             else if (input == "0-0-0" || input == "O-O-O") {
                 castle_kingside = false;
-                file = charToInt('c', true);
+                file = charToInt('c');
                 rank = side ? 1 : 8;
             }
             else {//no other legal castling options
@@ -447,7 +447,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
             ss << input.back();
             ss >> rank;
             input.pop_back();
-            file = charToInt(input.back(), true);
+            file = charToInt(input.back());
             input.pop_back();
             if (capture) {
                 //if a capture, the next char will be x

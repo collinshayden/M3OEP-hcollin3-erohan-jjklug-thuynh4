@@ -81,10 +81,9 @@ public:
     /**
      * file character to an integer
      * @param c
-     * @param file
      * @return file as an int
      */
-    int charToInt(char c, bool file);
+    int charToInt(char c);
     /**
      * menu of chess notation for user
      * @param outs
