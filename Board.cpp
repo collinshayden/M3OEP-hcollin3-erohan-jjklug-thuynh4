@@ -357,6 +357,7 @@ vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     bool move;
     char piece;
     //ask for move
+    chessNotation(outs);
     outs << "Please enter a move: ";
     getline(ins,input);
     while(!good) {
