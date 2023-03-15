@@ -6,6 +6,7 @@
 #define M1OEP_HCOLLIN3_PIECECLASSES_H
 
 #endif //M1OEP_HCOLLIN3_PIECECLASSES_H
+//just for easy inclusion
 
 #include "../Piece.h"
 #include "Pawn.h"

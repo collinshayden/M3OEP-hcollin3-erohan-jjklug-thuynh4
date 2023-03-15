@@ -16,6 +16,11 @@ enum squares {
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
+King::King(bool side) : Piece(side) {
+    piece_type = 'K';
+    unicode = "♔";
+}
+
 vector<int> King::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> attacked_squares;
     //index offsets for king moves in 1x128 board representation
@@ -34,11 +39,6 @@ vector<int> King::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> 
         }
     }
     return attacked_squares;
-}
-
-King::King(bool side) : Piece(side) {
-    piece_type = 'K';
-    unicode = "♔";
 }
 
 vector<bool> castleAvailability(bool side, vector<unique_ptr<Piece>> &board, vector<int> opp_attacked_squares) {

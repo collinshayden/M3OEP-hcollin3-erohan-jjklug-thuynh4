@@ -10,8 +10,18 @@
 //Piece class to represent empty squares
 class Empty : public Piece {
 public:
+    /**
+     * constructor
+     * creates an empty square
+     * @param side
+     */
     Empty(bool side);
-
+    /**
+     * gets attacked squares - does nothing
+     * @param initial_pos
+     * @param board
+     * @return empty vector
+     */
     vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 };
 

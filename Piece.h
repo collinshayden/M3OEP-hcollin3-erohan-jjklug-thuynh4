@@ -13,8 +13,19 @@ using namespace std;
 class Piece {
 
 public:
+    /**
+     * constructor
+     * parent class
+     * creates piece object
+     * @param side
+     */
     Piece(int side);
-
+    /**
+     * purely virtual method for attacked squares
+     * @param index
+     * @param board
+     * @return vector of possible squares to move to
+     */
     virtual vector<int> getAttackedSquares(int index, vector<unique_ptr<Piece>> &board);
 
     int side; // 1 for white, 0 for black, -1 for empty/offboard

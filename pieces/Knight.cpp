@@ -4,6 +4,11 @@
 
 #include "Knight.h"
 
+Knight::Knight(bool side) : Piece(side) {
+    piece_type = 'N';
+    unicode = "♘";
+}
+
 vector<int> Knight::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     //index offsets for knight moves in 1x128 board representation
     vector<int> attacked_squares;
@@ -24,7 +29,3 @@ vector<int> Knight::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>
     return attacked_squares;
 }
 
-Knight::Knight(bool side) : Piece(side) {
-    piece_type = 'N';
-    unicode = "♘";
-}

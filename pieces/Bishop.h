@@ -9,8 +9,18 @@
 
 class Bishop : public Piece {
 public:
+    /**
+     * constructor
+     * creates Bishop object
+     * @param side
+     */
     Bishop(bool side);
-
+    /**
+     * gets attacked squares for the piece
+     * @param initial_pos
+     * @param board
+     * @return vector of attacked squares
+     */
     vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 
 };

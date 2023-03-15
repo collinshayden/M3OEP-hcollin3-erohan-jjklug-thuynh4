@@ -4,6 +4,11 @@
 
 #include "Rook.h"
 
+Rook::Rook(bool side) : Piece(side) {
+    piece_type = 'R';
+    unicode = "♖";
+}
+
 vector<int> Rook::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> attacked_squares;
     //index offsets for rook moves in 1x128 board representation
@@ -29,7 +34,3 @@ vector<int> Rook::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> 
     return attacked_squares;
 }
 
-Rook::Rook(bool side) : Piece(side) {
-    piece_type = 'R';
-    unicode = "♖";
-}

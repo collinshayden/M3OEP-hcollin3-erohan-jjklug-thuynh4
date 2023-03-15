@@ -4,6 +4,11 @@
 
 #include "Queen.h"
 
+Queen::Queen(bool side) : Piece(side) {
+    piece_type = 'Q';
+    unicode = "♕";
+}
+
 vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) {
     vector<int> attacked_squares;
     //index offsets for queen moves in 1x128 board representation
@@ -27,9 +32,4 @@ vector<int> Queen::getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>>
         }
     }
     return attacked_squares;
-}
-
-Queen::Queen(bool side) : Piece(side) {
-    piece_type = 'Q';
-    unicode = "♕";
 }
