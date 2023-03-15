@@ -37,6 +37,8 @@ public:
 
     string getFEN(bool turn);
     //prints
+    void chessNotation(ostream& outs);
+
     void printBoard();
 
     void printAttackedSquares(bool side);

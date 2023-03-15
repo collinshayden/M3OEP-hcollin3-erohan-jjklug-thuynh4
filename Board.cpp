@@ -335,6 +335,16 @@ string Board::getFEN(bool turn) {
     //full move clock starts at 1 incremented when its blacks move
     FEN += "1 ";
 }
+void Board::chessNotation(std::ostream& outs){
+    outs << "How to enter a move\nThis program uses default chess notation";
+    outs << "For a pawn move, select the square you would like it to go, eg: e4, d3, a1\n";
+    outs << "To capture with a pawn, write the place the pawn is on, then an 'X' and then the square the piece is on, eg exd4\n";
+    outs << "For Knight(N), Rook(R), Bishop(B), Queen(Q), or King(K) add the according letter before the square, eg Nf3, Ra7, Bd3, Qh3, Kh1\n";
+    outs << "to capture with any of the pieces above, write the letter corresponding, and then an 'X' followed by the square the captured piece is on. eg Rxe4 Nxh7\n";
+    outs << "for only Knights(N), and Rooks(R), if both of your pieces are able to go to the same square, please write the file it is on after, eg Nab3 Rae1\n";
+    outs << "To castle king side, O-O, for queen side, O-O-O\n";
+    outs << endl;
+}
 vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     //variables
     std::string input;
