@@ -7,7 +7,7 @@
 using namespace std;
 
 Piece::Piece(int color) {
-    hasMoved = false;
+    has_moved = false;
     side = color;
 }
 

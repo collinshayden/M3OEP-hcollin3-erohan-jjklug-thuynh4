@@ -18,9 +18,9 @@ public:
     virtual vector<int> getAttackedSquares(int index, vector<unique_ptr<Piece>> &board);
 
     int side; // 1 for white, 0 for black, -1 for empty/offboard
-    bool hasMoved;
-    int value;
+    bool has_moved;
     string unicode;
+    char piece_type; // P, K (king), Q, R, N (knight), B
 };
 
 

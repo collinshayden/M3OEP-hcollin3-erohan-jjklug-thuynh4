@@ -14,4 +14,7 @@ public:
     vector<int> getAttackedSquares(int initial_pos, vector<unique_ptr<Piece>> &board) override;
 };
 
+vector<int> getPawnPushes(int initial_pos, bool side, vector<unique_ptr<Piece>> &board);
+
+
 #endif //M1OEP_HCOLLIN3_PAWN_H
