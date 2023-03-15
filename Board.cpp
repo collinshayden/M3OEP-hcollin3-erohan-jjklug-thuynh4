@@ -263,6 +263,67 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     return legal_moves;
 }
 
+string Board::getFEN(bool turn) {
+    int square;
+    int empty_spaces;
+    string space;
+    char piece_type;
+    bool side;
+    string FEN = "";
+    stringstream ss;
+    for (int rank = 0; rank < 8; rank++) {
+        empty_spaces = 0;
+        for (int file = 0; file < 16; file++) {
+            square = rank * 16 + file;
+            if (!(square & 0x88)) {
+                //find what piece is there + black or white
+                piece_type = board.at(square)->piece_type;
+                side = board.at(square)->side;
+                if(piece_type == 'E'){
+                    empty_spaces++;
+                }else{
+                    if(!side){
+                        tolower(piece_type);
+                    }
+                    if(empty_spaces == 0){
+                        FEN += piece_type;
+                    }else{
+                        ss << empty_spaces;
+                        ss >> space;
+                        FEN += space + piece_type;
+                        empty_spaces = 0;
+                        ss.clear();
+                    }
+                }
+            }
+        }
+        if(rank != 7) {
+            if (empty_spaces == 0) {
+                FEN += "/";
+            }else{
+                ss << empty_spaces;
+                ss >> space;
+                FEN += space + "/";
+                ss.clear();
+            }
+        }
+
+    }
+    //a space + whos move it is b or w
+    if(turn){
+        FEN += " w ";
+    }else{
+        FEN += " b ";
+    }
+    //what can castle
+    FEN += "- ";
+    //en passent square regardless if a pawn can move there
+    FEN += "- ";
+    //half move clock for 50 move rule - i think can just leave as 0
+    FEN += "0 ";
+    //full move clock starts at 1 incremented when its blacks move
+    FEN += "1 ";
+}
 vector<int> Board::getUserMove(bool side, ostream& outs, istream& ins) {
     //variables
     std::string input;

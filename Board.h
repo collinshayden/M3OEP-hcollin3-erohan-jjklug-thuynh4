@@ -35,6 +35,7 @@ public:
 
     map<int, vector<int>> getLegalMoves(bool side);
 
+    string getFEN(bool turn);
     //prints
     void printBoard();
 
