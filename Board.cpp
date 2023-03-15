@@ -258,6 +258,78 @@ map<int, vector<int>> Board::getLegalMoves(bool side) {
     }
     return legal_moves;
 }
+//gets FEN of board
+string Board::getFEN(bool turn) {
+    //variables
+    int square;
+    int empty_spaces;
+    string space;
+    char piece_type;
+    bool side;
+    string FEN = "";
+    stringstream ss;
+    //for loop through the board
+    for (int rank = 0; rank < 8; rank++) {
+        empty_spaces = 0;
+        for (int file = 0; file < 16; file++) {
+            square = rank * 16 + file;
+            //if square is on the board
+            if (!(square & 0x88)) {
+                //find what piece is there + black or white
+                piece_type = board.at(square)->piece_type;
+                side = board.at(square)->side;
+                //if empty add one to empty spaces
+                if(piece_type == 'E'){
+                    empty_spaces++;
+                }else{
+                    //if black make piece_type lower case
+                    if(!side){
+                        tolower(piece_type);
+                    }
+                    //if no empty spaces before piece, just add the piece
+                    if(empty_spaces == 0){
+                        FEN += piece_type;
+                    }else{
+                        //else add the amount of empty spaces before the piece and then add the piece
+                        ss << empty_spaces;
+                        ss >> space;
+                        FEN += space + piece_type;
+                        //reset spaces
+                        empty_spaces = 0;
+                        ss.clear();
+                    }
+                }
+            }
+        }
+        //if not the last rank
+        if(rank != 7) {
+            //if no spaces, just add a slash
+            if (empty_spaces == 0) {
+                FEN += "/";
+            }else{
+                //otherwise add the amount of spaces and then end the rank
+                ss << empty_spaces;
+                ss >> space;
+                FEN += space + "/";
+                ss.clear();
+            }
+        }
+    }
+    //a space + whos move it is b or w
+    if(turn){
+        FEN += " w ";
+    }else{
+        FEN += " b ";
+    }
+    //what can castle
+    FEN += "- ";
+    //en passent square regardless if a pawn can move there
+    FEN += "- ";
+    //half move clock for 50 move rule - i think can just leave as 0
+    FEN += "0 ";
+    //full move clock starts at 1 incremented when its blacks move
+    FEN += "1 ";
+}
 
 //takes a file character (a-h) and returns integer value (0 indexed)
 int Board::charToInt(char c, bool file) {
@@ -265,8 +337,19 @@ int Board::charToInt(char c, bool file) {
     return file ? c - 97 : c - 48;
 }
 
+void Board::chessNotation(std::ostream& outs){
+    outs << "How to enter a move\nThis program uses default chess notation";
+    outs << "For a pawn move, select the square you would like it to go, eg: e4, d3, a1\n";
+    outs << "To capture with a pawn, write the place the pawn is on, then an 'X' and then the square the piece is on, eg exd4\n";
+    outs << "For Knight(N), Rook(R), Bishop(B), Queen(Q), or King(K) add the according letter before the square, eg Nf3, Ra7, Bd3, Qh3, Kh1\n";
+    outs << "to capture with any of the pieces above, write the letter corresponding, and then an 'X' followed by the square the captured piece is on. eg Rxe4 Nxh7\n";
+    outs << "for only Knights(N), and Rooks(R), if both of your pieces are able to go to the same square, please write the file it is on after, eg Nab3 Rae1\n";
+    outs << "To castle king side, O-O, for queen side, O-O-O\n";
+    outs << endl;
+}
 //see https://github.com/jacksonthall22/SAN-strings/blob/main/san_strings.txt as a reference for all possible legal short algebraic moves
 vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
+
     //variables
     std::string input, original_input;
     bool legal = false;
@@ -358,7 +441,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                 legal = false;
                 castle = false;
             }
-            
+
         } else {
             // rank and file will be last two chars
             ss << input.back();
@@ -466,6 +549,8 @@ void Board::checkGameEnd() {
         }
         game_end = true;
     }
+
+
 }
 
 //prints unicode representation of board
