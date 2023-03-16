@@ -29,7 +29,7 @@ enum squares {
     a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
-vector<int> getMove(string FEN, string elo,Board board);
+string getMove(string FEN, int elo,Board board);
 
 void passAndPlay(Board& board);
 
@@ -39,12 +39,14 @@ void regularPlay();
 
 int squareToInt(string square);
 
+void makeCompMove(bool side,int elo,Board& board);
+
 int main () {
     cout << "Welcome to Chess" << endl;
     regularPlay();
 }
 
-vector<int> getMove(string FEN, string elo, Board board){
+string getMove(string FEN, string elo, Board board){
     //change based on computer type
     const string python = "python";
     string command = python + "../stockfish.py" + " "+ FEN +" "+ elo;
@@ -54,19 +56,36 @@ vector<int> getMove(string FEN, string elo, Board board){
 }
 
 void passAndPlay(Board& board){
-
+    vector<int> moves;
+    bool side = true;
+    while(!board.game_end){
+        if(side){
+            cout << "White to move." << endl;
+        }else{
+            cout << "Black to move." << endl;
+        }
+        moves = board.getUserMove(side, cout, cin);
+        board.makeUserMove(moves);
+        board.printBoard(side);
+        board.checkGameEnd();
+        side = !side;
+    }
 }
 
 void stockFish(int elo,Board& board,bool side){
     if(!side){
-        board.move()
+        makeCompMove(!side,elo,board);
     }
     while(!board.game_end) {
-        board.printLegalMovesList(board.side_to_move);
-        vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
+        //board.printLegalMovesList(board.side_to_move);
+        vector<int> moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard(true);
-//        board.checkGameEnd();
+        board.printBoard(side);
+        board.checkGameEnd();
+        if(!board.game_end) {
+            makeCompMove(!side, elo, board);
+        }
+        board.checkGameEnd();
     }
 }
 
@@ -108,7 +127,19 @@ void regularPlay(){
             elo = 2000;
         }
         //run stockfish option
-
+        cin.clear();
+        cout << "Would you like to play as white or black?(w/b) " << endl;
+        getline(cin,line);
+        while(line != "w" || line != "b"){
+            cout << "please enter a valid option (w/b): " << endl;
+            cin.clear();
+            getline(cin,line);
+        }
+        if(line == "w"){
+            side = true;
+        }else{
+            side = false;
+        }
         stockFish(elo,board,side);
     }
 }
@@ -116,5 +147,15 @@ void regularPlay(){
 int squareToInt(string square){
     int file = square[0]-97;
     int rank = square[1];
-    return
+    return (8 - rank) * 16 + file;
+}
+
+void makeCompMove(bool side, int elo, Board& board){
+    string opp_move;
+    int init;
+    int target;
+    opp_move = getMove(board.getFEN(side),elo,board);
+    init = squareToInt(opp_move.substr(0,2));
+    target = squareToInt(opp_move.substr(2,2));
+    board.move(init,target);
 }

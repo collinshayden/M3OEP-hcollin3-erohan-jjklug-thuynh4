@@ -329,6 +329,7 @@ string Board::getFEN(bool turn) {
     FEN += "0 ";
     //full move clock starts at 1 incremented when its blacks move
     FEN += "1 ";
+    return FEN;
 }
 
 //takes a file character (a-h) and returns integer value (0 indexed)
