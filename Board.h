@@ -24,7 +24,7 @@ public:
      *
      * @return vector of pieces representing the board
      */
-    vector<unique_ptr<Piece>> getBoard();
+    std::vector<unique_ptr<Piece>> getBoard();
     /** setter for board
      *
      * @param new_board

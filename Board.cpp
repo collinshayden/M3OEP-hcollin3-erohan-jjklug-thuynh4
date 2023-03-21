@@ -523,6 +523,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
         ins.clear();
         outs << '"' << original_input << '"' << " is invalid. Please enter a legal move: ";
     }
+    return {1,2};
 }
 
 bool Board::makeUserMove(vector<int> moves) {

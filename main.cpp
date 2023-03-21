@@ -43,7 +43,8 @@ void makeCompMove(bool side,int elo,Board& board);
 
 int main () {
     cout << "Welcome to Chess" << endl;
-    regularPlay();
+    //regularPlay();
+    return 0;
 }
 
 string getMove(string FEN, string elo, Board board){
@@ -53,6 +54,7 @@ string getMove(string FEN, string elo, Board board){
     system(command.c_str());
     //get return from python?
     string move = "?";
+    return "e4e5";
 }
 
 void passAndPlay(Board& board){
