@@ -1,6 +1,7 @@
 //Hayden Collins, OEP
 #include "Board.h"
 #include <iomanip>
+#include <algorithm>
 #include <iostream>
 #include "pieces/pieceClasses.h"
 #include <filesystem>

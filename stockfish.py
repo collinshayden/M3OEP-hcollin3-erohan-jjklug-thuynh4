@@ -1,6 +1,6 @@
 #imports
 import sys
-from stockfish import Stockfish
+from Stockfish import stockfish
 #get arguments from c++
 FEN = sys.argv[1]
 elo = sys.argv[2]
