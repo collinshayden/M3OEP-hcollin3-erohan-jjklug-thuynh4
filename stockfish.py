@@ -13,4 +13,5 @@ if(stockfish.is_fen_valid()):
     move = stockfish.get_best_move()
 else:
     move = "invalid"
+
 #return best move to c++
