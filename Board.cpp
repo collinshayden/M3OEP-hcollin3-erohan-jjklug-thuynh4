@@ -4,6 +4,7 @@
 #include "Board.h"
 #include <stdio.h>
 #include <memory>
+#include <algorithm>
 #include "pieces/pieceClasses.h"
 #include "string"
 #include <iostream>
