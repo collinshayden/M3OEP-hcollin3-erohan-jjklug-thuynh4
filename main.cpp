@@ -56,13 +56,14 @@ string getMove(string FEN, int elo){
     const string python = "python";
     string command = python + " ../stockfish.py" + " "+ FEN +" "+ to_string(elo);
     system(command.c_str());
+    string move = "e2e4";
     return move;
 }
 
 void passAndPlay(Board& board){
     vector<int> moves;
     bool side = true;
-    board.printBoard(true);
+    board.printBoard(side);
     while(!board.game_end){
         if(side){
             cout << "White to move." << endl;
@@ -71,7 +72,7 @@ void passAndPlay(Board& board){
         }
         moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard(true);
+        board.printBoard(!side);
         board.checkGameEnd();
         side = !side;
     }

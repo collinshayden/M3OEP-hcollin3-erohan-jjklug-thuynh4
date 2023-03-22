@@ -578,16 +578,16 @@ void Board::printBoard(bool side) {
             }
             printf("\n");
         }
-        printf("\n    a b c d e f g h\n");
+        printf("    a b c d e f g h\n");
     }else{
         //print for black
         printf("\n");
 
-        for (int rank = 7; rank > 0; rank--) {
-            for (int file = 15; file > 0; file--) {
+        for (int rank = 7; rank >= 0; rank--) {
+            for (int file = 15; file >= 0; file--) {
                 int square = rank * 16 + file;
 
-                if (file == 0) {
+                if (file == 15) {
                     printf(" %d  ", 8 - rank);
                 }
                 // if square is on board
@@ -597,7 +597,7 @@ void Board::printBoard(bool side) {
             }
             printf("\n");
         }
-        printf("\n    h g f e d c b a\n");
+        printf("    h g f e d c b a\n");
     }
 }
 
