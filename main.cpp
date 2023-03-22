@@ -69,6 +69,7 @@ string getMove(string FEN, int elo){
 void passAndPlay(Board& board){
     vector<int> moves;
     bool side = true;
+    board.printBoard(side);
     while(!board.game_end){
         if(side){
             cout << "White to move." << endl;
