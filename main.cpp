@@ -107,7 +107,7 @@ void regularPlay(){
     Board board(true);
     cout << "would you like to do pass and play or play a computer? (p/c) " << endl;
     getline(cin, line);
-    while(line != "p" || line != "c"){
+    while(line != "p" && line != "c"){
         cout << "please enter a valid option (p/c): " << endl;
         cin.clear();
         getline(cin,line);
@@ -122,7 +122,7 @@ void regularPlay(){
         cout << "Huong, elo 1900" << endl;
         cout << "Who would you like to play against? (j,e,ha,hu) " << endl;
         getline(cin, line);
-        while(line != "j" || line != "e" || line != "ha" || line != "hu"){
+        while(line != "j" && line != "e" && line != "ha" && line != "hu"){
             cout << "please enter a valid option (j,e,ha,hu): " << endl;
             cin.clear();
             getline(cin,line);
@@ -140,7 +140,7 @@ void regularPlay(){
         cin.clear();
         cout << "Would you like to play as white or black?(w/b) " << endl;
         getline(cin,line);
-        while(line != "w" || line != "b"){
+        while(line != "w" && line != "b"){
             cout << "please enter a valid option (w/b): " << endl;
             cin.clear();
             getline(cin,line);
