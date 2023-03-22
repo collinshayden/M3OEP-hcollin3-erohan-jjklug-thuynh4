@@ -1,7 +1,7 @@
 //
 // Created by Hayden Collins on 2/21/23.
 //
-
+#include <algorithm>
 #include "King.h"
 
 // enum that lets us easily convert between algebraic coordinates and indices
