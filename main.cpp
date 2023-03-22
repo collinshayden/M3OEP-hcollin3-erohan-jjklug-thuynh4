@@ -58,7 +58,7 @@ string getMove(string FEN, int elo){
     ss << elo;
     ss >> elo1;
 
-    string command = python + "../stockfish.py" + " "+ FEN +" "+ elo1;
+    string command = python + " ../stockfish.py" + " "+ FEN +" "+ elo1;
     system(command.c_str());
     //get return from python?
     string move = "e4e5";
