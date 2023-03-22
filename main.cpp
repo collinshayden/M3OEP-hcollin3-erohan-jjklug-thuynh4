@@ -165,7 +165,6 @@ void makeCompMove(bool side, int elo, Board& board){
     int init;
     int target;
     opp_move = getMove(board.getFEN(side), elo);
-    cout << opp_move << endl;
     init = squareToInt(opp_move.substr(0,2));
     target = squareToInt(opp_move.substr(2,2));
     board.move(init,target);
