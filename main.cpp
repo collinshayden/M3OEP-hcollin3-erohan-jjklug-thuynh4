@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include "pieces/pieceClasses.h"
+#include <filesystem>
 #include <sstream>
 using namespace std;
 
@@ -28,7 +29,7 @@ enum squares {
     a2 = 96,  b2, c2, d2, e2, f2, g2, h2,
     a1 = 112, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
-string getMove(string FEN, int elo,Board board);
+string getMove(string FEN, int elo);
 
 void passAndPlay(Board& board);
 
@@ -42,18 +43,26 @@ void makeCompMove(bool side,int elo,Board& board);
 
 int main () {
     cout << "Welcome to Chess" << endl;
-    //regularPlay();
-    return 0;
+//    regularPlay();
+    Board board(true);
+//    board.printBoard(true);
+//    cout << board.getFEN(true) << endl;
+    regularPlay();
 }
 
-string getMove(string FEN, string elo, Board board){
+string getMove(string FEN, int elo){
     //change based on computer type
     const string python = "python";
-    string command = python + "../stockfish.py" + " "+ FEN +" "+ elo;
+    stringstream ss;
+    string elo1;
+    ss << elo;
+    ss >> elo1;
+
+    string command = python + "../stockfish.py" + " "+ FEN +" "+ elo1;
     system(command.c_str());
     //get return from python?
-    string move = "?";
-    return "e4e5";
+    string move = "e4e5";
+    return move;
 }
 
 void passAndPlay(Board& board){
@@ -155,7 +164,8 @@ void makeCompMove(bool side, int elo, Board& board){
     string opp_move;
     int init;
     int target;
-    opp_move = getMove(board.getFEN(side),elo,board);
+    opp_move = getMove(board.getFEN(side), elo);
+    cout << opp_move << endl;
     init = squareToInt(opp_move.substr(0,2));
     target = squareToInt(opp_move.substr(2,2));
     board.move(init,target);
