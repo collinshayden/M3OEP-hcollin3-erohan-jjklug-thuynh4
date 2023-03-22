@@ -3,6 +3,7 @@
 //
 #include "Board.h"
 #include <stdio.h>
+#include <memory>
 #include "pieces/pieceClasses.h"
 #include "string"
 #include <iostream>
