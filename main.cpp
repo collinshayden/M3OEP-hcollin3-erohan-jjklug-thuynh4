@@ -88,6 +88,7 @@ void stockFish(int elo,Board& board,bool side){
     if(!side){
         makeCompMove(!side,elo,board);
     }
+    board.printBoard(side);
     while(!board.game_end) {
         //board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(side, cout, cin);
