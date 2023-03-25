@@ -2,6 +2,8 @@
 #include "Board.h"
 #include <iomanip>
 #include <algorithm>
+#include <fstream>
+#include <string>
 #include <iostream>
 #include "pieces/pieceClasses.h"
 #include <filesystem>
@@ -54,16 +56,27 @@ int main () {
 string getMove(string FEN, int elo){
     //change based on computer type
     const string python = "python";
-    string command = python + " ../stockfish.py" + " "+ FEN +" "+ to_string(elo);
+    string command = python + " ../chess.py" + " "+ FEN +" "+ to_string(elo);
     system(command.c_str());
     string move = "e2e4";
+
+    //gather move from file now
+    ifstream stockMove;
+    stockMove.open("stockfishMove.txt");
+    if(stockMove.is_open()){
+        stockMove >> move;
+    }
+    //cout << move << endl;
+
+
     return move;
+    //pull from file when getting move from stockfish
 }
 
 void passAndPlay(Board& board){
     vector<int> moves;
     bool side = true;
-    board.printBoard(side);
+    board.printBoard(true);
     while(!board.game_end){
         if(side){
             cout << "White to move." << endl;
@@ -72,7 +85,7 @@ void passAndPlay(Board& board){
         }
         moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard(!side);
+        board.printBoard(true);
         board.checkGameEnd();
         side = !side;
     }

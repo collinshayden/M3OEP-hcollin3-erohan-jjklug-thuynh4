@@ -319,18 +319,18 @@ string Board::getFEN(bool turn) {
     }
     //a space + whos move it is b or w
     if(turn){
-        FEN += " w ";
+        FEN += "_w_";
     }else{
-        FEN += " b ";
+        FEN += "_b_";
     }
     //what can castle
-    FEN += "- ";
+    FEN += "-_";
     //en passent square regardless if a pawn can move there
-    FEN += "- ";
+    FEN += "-_";
     //half move clock for 50 move rule - i think can just leave as 0
-    FEN += "0 ";
+    FEN += "0_";
     //full move clock starts at 1 incremented when its blacks move
-    FEN += "1 ";
+    FEN += "1_";
     return FEN;
 }
 
