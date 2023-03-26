@@ -90,9 +90,8 @@ Board::Board(string setup) {
     else if (setup == "disambiguate") {
         board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
         board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(c7) = unique_ptr<Piece>(make_unique<Pawn>(false));
-        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
-        board.at(b5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(b5) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(g5) = unique_ptr<Piece>(make_unique<Rook>(true));
     }
     else if (setup == "castles") {
         board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
@@ -101,6 +100,17 @@ Board::Board(string setup) {
         board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
         board.at(h8) = unique_ptr<Piece>(make_unique<Rook>(false));
         board.at(a8) = unique_ptr<Piece>(make_unique<Rook>(false));
+    }
+    else if (setup == "legality") {
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(g8) = unique_ptr<Piece>(make_unique<Rook>(false));
+    }
+    else if (setup == "pin") {
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(f8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(e5) = unique_ptr<Piece>(make_unique<Knight>(true));
     }
 }
 
@@ -700,7 +710,6 @@ void Board::printLegalMoves(bool side) {
 
 void Board::printLegalMovesList(bool side) {
     //TODO print move disambiguating
-    cout << "printing legal moves" << endl;
     map<int, vector<int>> legal_moves = getLegalMoves(side);
     cout << "The legal moves in this position are: ";
     for (const auto &elem: legal_moves) {

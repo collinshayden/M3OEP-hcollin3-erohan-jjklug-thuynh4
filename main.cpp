@@ -170,11 +170,11 @@ void regularPlay(){
 
 void tests() {
     string setup;
-    vector<string> setups = {"checkmate", "promotion", "castles", "stalemate", "disambiguate"};
-    cout << "Choose a setup: 'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
+    vector<string> setups = {"pin", "legality", "checkmate", "promotion", "castles", "stalemate", "disambiguate"};
+    cout << "Choose a setup: 'pin', 'legality' ,'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
     getline(cin,setup);
     while (find(setups.begin(), setups.end(), setup) == setups.end()) {
-        cout << setup << " is invalid. Choose from: 'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
+        cout << setup << " is invalid. Choose from: 'pin', 'legality', 'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
         getline(cin,setup);
     }
     Board board(setup);
@@ -189,10 +189,18 @@ void tests() {
         cout << "Enter 'a8=Q', 'a8=R', 'a8=N', or 'a8=B' to demonstrate promotion." << endl;
     }
     else if (setup == "disambiguate") {
-        cout << "Enter 'Ndxc7' or 'Nbxc7' to demonstrate disambiguation and captures." << endl;
+        cout << "Enter 'Rbd5' or 'Rgd5' to demonstrate disambiguation." << endl;
     }
     else if (setup == "castles") {
         cout << "Enter '0-0' or '0-0-0' to demonstrate castling." << endl;
+    }
+    else if (setup == "legality") {
+        cout << "The Black rook on f8 prevents White from moving into check on f1 or f2. ";
+        board.printLegalMovesList(board.side_to_move);
+    }
+    else if (setup == "pin") {
+        cout << "The Black rook on e8 prevents White from moving the knight, it is pinned to the king. ";
+        board.printLegalMovesList(board.side_to_move);
     }
     else {
         cout << "Invalid setup type" << endl;
