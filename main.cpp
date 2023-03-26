@@ -95,8 +95,9 @@ void stockFish(int elo,Board& board,bool side){
     if(!side){
         makeCompMove(!side,elo,board);
     }
-    board.printBoard(side);
+
     while(!board.game_end) {
+        board.printBoard(side);
         //board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
@@ -215,9 +216,9 @@ void tests() {
 
 int squareToInt(string square){
     cout << square << endl;
-    int rank = square[0]-97;
-    int file = square[1]-48;
-    return rank * 16 + file;
+    int file= square[0]-97;
+    int rank = square[1]-48;
+    return (8 - rank) * 16 + file;
 }
 
 void makeCompMove(bool side, int elo, Board& board){
