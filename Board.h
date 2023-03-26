@@ -20,6 +20,10 @@ public:
      */
     Board(bool setup);
 
+    /** Constructor for Board class
+     *
+     * @param string setup
+     */
     Board(string setup);
 
     /** getter for board
