@@ -146,6 +146,8 @@ private:
     char piece_types[7] = {'E', 'P', 'R', 'N', 'B', 'Q', 'K'};
     char promotion_type = 'E';
     bool promotion = false;
+    int move_count = 0;
+    vector<string> moves_list;
 };
 
 
