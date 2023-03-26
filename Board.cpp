@@ -330,7 +330,7 @@ string Board::getFEN(bool turn) {
     //half move clock for 50 move rule - i think can just leave as 0
     FEN += "0_";
     //full move clock starts at 1 incremented when its blacks move
-    FEN += "1_";
+    FEN += "1";
     return FEN;
 }
 
