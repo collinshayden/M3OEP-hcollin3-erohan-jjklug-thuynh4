@@ -503,15 +503,20 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
                             if (rank_file_specifier != '0') {
                                 //
                                 if (find(files, files+8, rank_file_specifier) != files+8) {
-                                    if (square_to_coords[elem.first][0] == rank_file_specifier)
+                                    if (square_to_coords[elem.first][0] == rank_file_specifier) {
+                                        moves_list.push_back(original_input);
                                         return vector<int>{elem.first, target_sq};
+                                    }
                                 }
                                 else if (find(ranks, ranks+8, rank_file_specifier) != ranks+8) {
-                                    if (square_to_coords[elem.first][1] == rank_file_specifier)
+                                    if (square_to_coords[elem.first][1] == rank_file_specifier) {
+                                        moves_list.push_back(original_input);
                                         return vector<int>{elem.first, target_sq};
+                                    }
                                 }
                             }
                             else {
+                                moves_list.push_back(original_input);
                                 return vector<int>{elem.first, target_sq};
                             }
 
@@ -529,6 +534,7 @@ vector<int> Board::getUserMove(bool side, ostream &outs, istream &ins) {
 }
 
 bool Board::makeUserMove(vector<int> moves) {
+    move_count += 1;
     if (moves.size() == 2) {
         promotion = promotion_type != 'E';
         move(moves.at(0), moves.at(1));
