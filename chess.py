@@ -14,14 +14,12 @@ FEN = FEN.replace('_', " ")
 stockfish.set_elo_rating(elo)
 stockfish.set_fen_position(FEN)
 # get best move
-print(FEN)
 if stockfish.is_fen_valid(FEN):
     move = stockfish.get_best_move()
 else:
     move = "invalid"
 # return best move to c++
 
-print(move)
 
 # save to file on way out and send back to c++
 f = open("stockfishMove.txt", "w")

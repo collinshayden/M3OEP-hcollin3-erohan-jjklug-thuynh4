@@ -286,7 +286,7 @@ string Board::getFEN(bool turn) {
                 }else{
                     //if black make piece_type lower case
                     if(!side){
-                        tolower(piece_type);
+                        piece_type = tolower(piece_type);
                     }
                     //if no empty spaces before piece, just add the piece
                     if(empty_spaces == 0){

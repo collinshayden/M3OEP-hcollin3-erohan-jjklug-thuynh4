@@ -62,11 +62,12 @@ string getMove(string FEN, int elo){
 
     //gather move from file now
     ifstream stockMove;
-    stockMove.open("stockfishMove.txt");
+    stockMove.open("../cmake-build-debug/stockfishMove.txt");
     if(stockMove.is_open()){
         stockMove >> move;
     }
-    //cout << move << endl;
+    cout << move << endl;
+    stockMove.close();
 
 
     return move;
@@ -175,6 +176,7 @@ void makeCompMove(bool side, int elo, Board& board){
     int init;
     int target;
     opp_move = getMove(board.getFEN(side), elo);
+    cout << "hi" << endl;
     init = squareToInt(opp_move.substr(0,2));
     target = squareToInt(opp_move.substr(2,2));
     board.move(init,target);
