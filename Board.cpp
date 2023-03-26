@@ -65,7 +65,42 @@ Board::Board(bool setup) {
         board.at(f8) = unique_ptr<Piece>(make_unique<King>(false));
         board.at(a8) = unique_ptr<Piece>(make_unique<King>(true));
         board.at(d7) = unique_ptr<Piece>(make_unique<Pawn>(true));
+    }
+}
 
+Board::Board(string setup) {
+    for (int j = 0; j < 128; j++) {
+        board.push_back(std::unique_ptr<Piece>(make_unique<Empty>(true)));
+    }
+    if (setup == "checkmate") {
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e6) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(h7) = unique_ptr<Piece>(make_unique<Rook>(true));
+    }
+    else if (setup == "stalemate") {
+        board.at(a8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(b1) = unique_ptr<Piece>(make_unique<Queen>(true));
+    }
+    else if (setup == "promotion") {
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(a7) = unique_ptr<Piece>(make_unique<Pawn>(true));
+    }
+    else if (setup == "disambiguate") {
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(c7) = unique_ptr<Piece>(make_unique<Pawn>(false));
+        board.at(d5) = unique_ptr<Piece>(make_unique<Knight>(true));
+        board.at(b5) = unique_ptr<Piece>(make_unique<Knight>(true));
+    }
+    else if (setup == "castles") {
+        board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
+        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
+        board.at(h1) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(a1) = unique_ptr<Piece>(make_unique<Rook>(true));
+        board.at(h8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(a8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
 }
 

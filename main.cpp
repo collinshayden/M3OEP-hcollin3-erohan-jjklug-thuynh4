@@ -40,16 +40,15 @@ void stockFish(int elo,Board& board,bool side);
 
 void regularPlay();
 
+void tests();
+
 int squareToInt(string square);
 
 void makeCompMove(bool side,int elo,Board& board);
 
 int main () {
     cout << "Welcome to Chess" << endl;
-//    regularPlay();
     Board board(true);
-//    board.printBoard(true);
-//    cout << board.getFEN(true) << endl;
     regularPlay();
 }
 
@@ -116,16 +115,20 @@ void regularPlay(){
     int elo;
     bool side;
     Board board(true);
-    cout << "would you like to do pass and play or play a computer? (p/c) " << endl;
+    cout << "Would you like to do pass and play or play a computer? (p/c) or (debug) to enter custom setups: " << endl;
     getline(cin, line);
-    while(line != "p" && line != "c"){
+    while(line != "p" && line != "c" && line != "debug"){
         cout << "please enter a valid option (p/c): " << endl;
         cin.clear();
         getline(cin,line);
     }
     if(line == "p"){
         passAndPlay(board);
-    }else{
+    }
+    else if (line == "debug") {
+        tests();
+    }
+    else{
         cin.clear();
         cout << "Jack , elo 400" << endl;
         cout << "Evan, elo 1000" << endl;
@@ -162,6 +165,43 @@ void regularPlay(){
             side = false;
         }
         stockFish(elo,board,side);
+    }
+}
+
+void tests() {
+    string setup;
+    vector<string> setups = {"checkmate", "promotion", "castles", "stalemate", "disambiguate"};
+    cout << "Choose a setup: 'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
+    getline(cin,setup);
+    while (find(setups.begin(), setups.end(), setup) == setups.end()) {
+        cout << setup << " is invalid. Choose from: 'checkmate', 'promotion', 'castles', 'stalemate', 'disambiguate'" << endl;
+        getline(cin,setup);
+    }
+    Board board(setup);
+    board.printBoard(true);
+    if (setup == "checkmate") {
+        cout << "Enter Rh8 to demonstrate checkmate." << endl;
+    }
+    else if (setup == "stalemate") {
+        cout << "Enter Qb6 to demonstrate stalemate." << endl;
+    }
+    else if (setup == "promotion") {
+        cout << "Enter 'a8=Q', 'a8=R', 'a8=N', or 'a8=B' to demonstrate promotion." << endl;
+    }
+    else if (setup == "disambiguate") {
+        cout << "Enter 'Ndxc7' or 'Nbxc7' to demonstrate disambiguation and captures." << endl;
+    }
+    else if (setup == "castles") {
+        cout << "Enter '0-0' or '0-0-0' to demonstrate castling." << endl;
+    }
+    else {
+        cout << "Invalid setup type" << endl;
+    }
+    while (!board.game_end) {
+        vector<int> moves = board.getUserMove(board.side_to_move, cout, cin);
+        board.makeUserMove(moves);
+        board.printBoard(true);
+        board.checkGameEnd();
     }
 }
 

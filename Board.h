@@ -11,7 +11,7 @@
 
 class Board {
 public:
-    bool side_to_move;
+    bool side_to_move = true;
     bool game_end = false;
 
     /** Constructor for Board class
@@ -19,6 +19,8 @@ public:
      * @param bool setup
      */
     Board(bool setup);
+
+    Board(string setup);
 
     /** getter for board
      *
