@@ -54,7 +54,7 @@ int main () {
 
 string getMove(string FEN, int elo){
     //change based on computer type
-    const string python = "python";
+    const string python = "python3";
     string command = python + " ../chess.py" + " "+ FEN +" "+ to_string(elo);
     system(command.c_str());
     string move = "e2e4";
@@ -65,7 +65,6 @@ string getMove(string FEN, int elo){
     if(stockMove.is_open()){
         stockMove >> move;
     }
-    cout << move << endl;
     stockMove.close();
 
 
@@ -91,20 +90,23 @@ void passAndPlay(Board& board){
     }
 }
 
+//side is player's side
 void stockFish(int elo,Board& board,bool side){
     if(!side){
         makeCompMove(!side,elo,board);
     }
 
     while(!board.game_end) {
-        board.printBoard(side);
+        board.printBoard(true);
         //board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard(side);
+        board.printBoard(true);
         board.checkGameEnd();
         if(!board.game_end) {
+            cout << board.getFEN(board.side_to_move) << endl;
             makeCompMove(!side, elo, board);
+            cout << board.getFEN(board.side_to_move) << endl;
         }
         board.checkGameEnd();
     }
@@ -228,7 +230,5 @@ void makeCompMove(bool side, int elo, Board& board){
     opp_move = getMove(board.getFEN(side), elo);
     init = squareToInt(opp_move.substr(0,2));
     target = squareToInt(opp_move.substr(2,2));
-    cout << init << endl;
-    cout << target << endl;
     board.move(init,target);
 }
