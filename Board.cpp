@@ -103,8 +103,8 @@ Board::Board(string setup) {
     }
     else if (setup == "legality") {
         board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));
-        board.at(e8) = unique_ptr<Piece>(make_unique<King>(false));
-        board.at(g8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(e8) = unique_ptr<Piece>(make_unique<Rook>(false));
+        board.at(f8) = unique_ptr<Piece>(make_unique<Rook>(false));
     }
     else if (setup == "pin") {
         board.at(e1) = unique_ptr<Piece>(make_unique<King>(true));

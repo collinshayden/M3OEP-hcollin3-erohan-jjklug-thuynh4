@@ -10,16 +10,10 @@
 #include <sstream>
 using namespace std;
 
-//TODO comments & readme
-//TODO menu on program start (color to play, stockfish enabled, show legal moves, etc)
-//TODO stockfish api via python
-//TODO FEN get/set positions
 //TODO print move disambiguating in printLegalMovesList
-//TODO add promotion
 //TODO save moves of the game in a list (needed for en passant and 50 move rule)
 //TODO add en passant
 //TODO add three fold repetition, insufficient material, 50 move rule draws
-//TODO add test cases for all complex functionality
 
 // square encoding
 enum squares {
