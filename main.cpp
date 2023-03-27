@@ -52,16 +52,19 @@ int main () {
     regularPlay();
 }
 
+//this method gets the move for the opponent from the stockfish python library
 string getMove(string FEN, int elo){
     //change based on computer type
     const string python = "python3";
     string command = python + " ../chess.py" + " "+ FEN +" "+ to_string(elo);
+    //sends a command to the terminal
     system(command.c_str());
     string move;
 
     //gather move from file now
     ifstream stockMove;
     stockMove.open("../cmake-build-debug/stockfishMove.txt");
+    //gets the move from a file written in python
     if(stockMove.is_open()){
         stockMove >> move;
     }
@@ -72,17 +75,22 @@ string getMove(string FEN, int elo){
     //pull from file when getting move from stockfish
 }
 
+//pass and play game mode method
 void passAndPlay(Board& board){
     vector<int> moves;
     bool side = true;
+    //print board
     board.printBoard(true);
+    //while loop to keep game running until somebody wins
     while(!board.game_end){
         if(side){
             cout << "White to move." << endl;
         }else{
             cout << "Black to move." << endl;
         }
+        //gets user move
         moves = board.getUserMove(side, cout, cin);
+        //makes the users move
         board.makeUserMove(moves);
         board.printBoard(true);
         board.checkGameEnd();
@@ -92,32 +100,42 @@ void passAndPlay(Board& board){
 
 //side is player's side
 void stockFish(int elo,Board& board,bool side){
+    //based on who is what color determines what order moves are made in
     if(!side){
         makeCompMove(!side,elo,board);
     }
 
     while(!board.game_end) {
+        //prints board
         board.printBoard(side);
-        //board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(side, cout, cin);
+        //makes the move for the user
         board.makeUserMove(moves);
+        //prints board again
         board.printBoard(side);
+        //checks if game is over
         board.checkGameEnd();
         if(!board.game_end) {
+            //computer moves
             makeCompMove(!side, elo, board);
         }
+        //checks if game is over
         board.checkGameEnd();
     }
 }
 
+//menu for user input and initial game setup
 void regularPlay(){
     string line;
     stringstream ss;
     int elo;
     bool side;
+    //sets up board
     Board board(true);
     cout << "Would you like to do pass and play or play a computer? (p/c) or (debug) to enter custom setups: " << endl;
+    //gets user input
     getline(cin, line);
+    //some input validation to choose what mode the user wants to play
     while(line != "p" && line != "c" && line != "debug"){
         cout << "please enter a valid option (p/c): " << endl;
         cin.clear();
@@ -135,6 +153,7 @@ void regularPlay(){
         cout << "Evan, elo 1000" << endl;
         cout << "Hayden, elo 1700" << endl;
         cout << "Huong, elo 1900" << endl;
+        //elo selector
         cout << "Who would you like to play against? (j,e,ha,hu) " << endl;
         getline(cin, line);
         while(line != "j" && line != "e" && line != "ha" && line != "hu"){
@@ -153,9 +172,11 @@ void regularPlay(){
         }
         //run stockfish option
         cin.clear();
+        //which side of the board would you like to play
         cout << "Would you like to play as white or black?(w/b) " << endl;
         getline(cin,line);
         while(line != "w" && line != "b"){
+            //validation
             cout << "please enter a valid option (w/b): " << endl;
             cin.clear();
             getline(cin,line);
@@ -214,18 +235,25 @@ void tests() {
     }
 }
 
+//method to convert a user inputted move into the new index in tbe board
 int squareToInt(string square){
     int file= square[0]-97;
     int rank = square[1]-48;
+    //calculation to get new index in the 0x88 board
     return (8 - rank) * 16 + file;
 }
 
+//makes the computer move
 void makeCompMove(bool side, int elo, Board& board){
     string opp_move;
     int init;
     int target;
+    //gets move from stockfish
     opp_move = getMove(board.getFEN(side), elo);
+    //gets initial pos of piece
     init = squareToInt(opp_move.substr(0,2));
+    //gets target position for piece
     target = squareToInt(opp_move.substr(2,2));
+    //moves piece for bot
     board.move(init,target);
 }
