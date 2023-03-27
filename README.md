@@ -17,7 +17,7 @@ via Python,
 No current bugs. 
 
 **Future Work**
-There is still much to do. Next module, graphics will be implemented. More engine functionality, perhaps web server implementations, 
+There is still much to do. Next module, graphics will focus on graphics. More engine functionality, perhaps web server implementations, 
 custom engines, refactoring a few things, etc are all options for future work. 
 
 **Grade**

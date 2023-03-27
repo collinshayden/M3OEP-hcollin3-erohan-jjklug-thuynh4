@@ -54,10 +54,10 @@ int main () {
 
 string getMove(string FEN, int elo){
     //change based on computer type
-    const string python = "python";
+    const string python = "python3";
     string command = python + " ../chess.py" + " "+ FEN +" "+ to_string(elo);
     system(command.c_str());
-    string move = "e2e4";
+    string move;
 
     //gather move from file now
     ifstream stockMove;
@@ -65,7 +65,6 @@ string getMove(string FEN, int elo){
     if(stockMove.is_open()){
         stockMove >> move;
     }
-    cout << move << endl;
     stockMove.close();
 
 
@@ -91,6 +90,7 @@ void passAndPlay(Board& board){
     }
 }
 
+//side is player's side
 void stockFish(int elo,Board& board,bool side){
     if(!side){
         makeCompMove(!side,elo,board);
