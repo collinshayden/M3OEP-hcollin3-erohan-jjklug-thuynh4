@@ -57,7 +57,7 @@ string getMove(string FEN, int elo){
     const string python = "python3";
     string command = python + " ../chess.py" + " "+ FEN +" "+ to_string(elo);
     system(command.c_str());
-    string move = "e2e4";
+    string move;
 
     //gather move from file now
     ifstream stockMove;
@@ -97,16 +97,14 @@ void stockFish(int elo,Board& board,bool side){
     }
 
     while(!board.game_end) {
-        board.printBoard(true);
+        board.printBoard(side);
         //board.printLegalMovesList(board.side_to_move);
         vector<int> moves = board.getUserMove(side, cout, cin);
         board.makeUserMove(moves);
-        board.printBoard(true);
+        board.printBoard(side);
         board.checkGameEnd();
         if(!board.game_end) {
-            cout << board.getFEN(board.side_to_move) << endl;
             makeCompMove(!side, elo, board);
-            cout << board.getFEN(board.side_to_move) << endl;
         }
         board.checkGameEnd();
     }

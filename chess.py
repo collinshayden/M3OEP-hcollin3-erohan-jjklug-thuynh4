@@ -4,10 +4,11 @@ import sys
 
 import subprocess
 import sys
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-install('stockfish')
+# def install(package):
+#     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+# install('stockfish')
+
 from stockfish import Stockfish
 
 # stockfish = Stockfish(r'C:\Users\jackk\OneDrive\College\Spring Semester 2023\CS120\stockfish_15.1_win_x64_avx2\stockfish-windows-2022-x86-64-avx2.exe')
@@ -27,8 +28,6 @@ if stockfish.is_fen_valid(FEN):
     move = stockfish.get_best_move()
 else:
     move = "invalid"
-# return best move to c++
-
 
 # save to file on way out and send back to c++
 f = open("stockfishMove.txt", "w")
