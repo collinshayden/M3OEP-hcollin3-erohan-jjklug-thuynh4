@@ -215,7 +215,6 @@ void tests() {
 }
 
 int squareToInt(string square){
-    cout << square << endl;
     int file= square[0]-97;
     int rank = square[1]-48;
     return (8 - rank) * 16 + file;
@@ -228,7 +227,5 @@ void makeCompMove(bool side, int elo, Board& board){
     opp_move = getMove(board.getFEN(side), elo);
     init = squareToInt(opp_move.substr(0,2));
     target = squareToInt(opp_move.substr(2,2));
-    cout << init << endl;
-    cout << target << endl;
     board.move(init,target);
 }
